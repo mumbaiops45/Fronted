@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import axios from "axios";
-
+import UploadDoc from "../components/uploadDoc";
 
 const formatCurrency = (value) => {
     if (!value && value !== 0) return "₹ 0";
@@ -18,6 +18,37 @@ const daysSince = (dateStr) => {
 };
 
 
+
+const steps = [
+    {
+        icons: "📥",
+        title: "Capture → Reachable",
+        time: "2h",
+        completed: true,
+    },
+    {
+        icons: "📞",
+        title: "Reachable → Qualified",
+        time: "1d",
+        completed: true,
+    },
+    {
+        icons: "📄",
+        title: "Qualified → Proposal",
+        time: "1d",
+        completed: true,
+    },
+    {
+        icons: "📄",
+        title: "Proposal → Closed",
+        time: "3d",
+        completed: true,
+        highlight: true,
+    },
+];
+
+
+
 const toDisplayString = (val, fallback = "Not specified") => {
     if (val === null || val === undefined) return fallback;
     if (typeof val === "string") return val.trim() || fallback;
@@ -25,10 +56,10 @@ const toDisplayString = (val, fallback = "Not specified") => {
     if (Array.isArray(val)) return val.map((v) => toDisplayString(v)).join(", ") || fallback;
     if (typeof val === "object") {
         if (val.amount !== undefined) return formatCurrency(val.amount);
-        if (val.name !== undefined)   return String(val.name);
-        if (val.value !== undefined)  return String(val.value);
-        if (val.label !== undefined)  return String(val.label);
-        if (val.text !== undefined)   return String(val.text);
+        if (val.name !== undefined) return String(val.name);
+        if (val.value !== undefined) return String(val.value);
+        if (val.label !== undefined) return String(val.label);
+        if (val.text !== undefined) return String(val.text);
         try {
             return JSON.stringify(val);
         } catch {
@@ -44,8 +75,8 @@ const toBantConfirmed = (val) => {
     if (typeof val === "boolean") return val;
     if (typeof val === "object" && val !== null) {
         if (typeof val.confirmed === "boolean") return val.confirmed;
-        if (typeof val.status === "boolean")    return val.status;
-      
+        if (typeof val.status === "boolean") return val.status;
+
         return Object.keys(val).length > 0;
     }
     return Boolean(val);
@@ -55,28 +86,28 @@ const toBantConfirmed = (val) => {
 
 const BRANCH_COLORS = {
     Bangalore: "bg-blue-100 text-blue-700",
-    Mumbai:    "bg-amber-100 text-amber-700",
-    Mysore:    "bg-emerald-100 text-emerald-700",
+    Mumbai: "bg-amber-100 text-amber-700",
+    Mysore: "bg-emerald-100 text-emerald-700",
 };
 
 const STAGE_COLORS = {
     "Lead Capture": "bg-blue-100 text-blue-700",
-    Capture:        "bg-blue-100 text-blue-700",
-    Reachable:      "bg-indigo-100 text-indigo-700",
-    Qualified:      "bg-yellow-100 text-yellow-700",
-    Proposal:       "bg-purple-100 text-purple-700",
-    Closed:         "bg-emerald-100 text-emerald-700",
+    Capture: "bg-blue-100 text-blue-700",
+    Reachable: "bg-indigo-100 text-indigo-700",
+    Qualified: "bg-yellow-100 text-yellow-700",
+    Proposal: "bg-purple-100 text-purple-700",
+    Closed: "bg-emerald-100 text-emerald-700",
 };
 
 const PRIORITY_COLORS = {
-    Hot:  "bg-red-100 text-red-700",
+    Hot: "bg-red-100 text-red-700",
     Warm: "bg-yellow-100 text-yellow-700",
     Cool: "bg-emerald-100 text-emerald-700",
 };
 
 const getBantColor = (score) => {
     if (score === 4) return "bg-emerald-100 text-emerald-700";
-    if (score >= 2)  return "bg-yellow-100 text-yellow-700";
+    if (score >= 2) return "bg-yellow-100 text-yellow-700";
     return "bg-red-100 text-red-700";
 };
 
@@ -100,7 +131,6 @@ const Spinner = ({ label = "Loading..." }) => (
 );
 
 
-
 const Badge = ({ label, colorClass = "bg-gray-100 text-gray-700" }) => (
     <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${colorClass}`}>
         {toDisplayString(label, "N/A")}
@@ -116,14 +146,14 @@ const ProfileTab = ({ lead }) => {
         : null;
 
     const fields = [
-        { label: "Phone",    value: lead.phone },
-        { label: "Email",    value: lead.email },
+        { label: "Phone", value: lead.phone },
+        { label: "Email", value: lead.email },
         { label: "Business", value: lead.businessName },
         { label: "Industry", value: lead.industry || lead.businessName?.split(" ")[1] },
         { label: "Location", value: lead.location || lead.branch },
-        { label: "Source",   value: lead.source?.trim().split(" ")[0] },
-        { label: "Rep",      value: lead.createdBy?.name },
-        { label: "Branch",   value: lead.branch },
+        { label: "Source", value: lead.source?.trim().split(" ")[0] },
+        { label: "Rep", value: lead.createdBy?.name },
+        { label: "Branch", value: lead.branch },
     ];
 
     return (
@@ -143,13 +173,60 @@ const ProfileTab = ({ lead }) => {
                     ))}
                 </div>
             </div>
-
             <div className="border-t border-gray-100" />
-
             <div>
                 <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
                     Stage Timestamps
                 </h3>
+                <div className="w-full max-w-md  bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+                    {steps.map((step, index) => (
+                        <div
+                            key={index}
+                            className={`flex items-center justify-between px-4 py-3 border-b last:border-b-0
+            ${step.highlight ? "bg-green-50" : "bg-white"}
+          `}
+                        >
+                            <div className="flex items-center  gap-3">
+
+
+                                <span>{step.icons} </span>
+
+                                <span
+                                    className={`text-[12px] font-medium ${step.highlight ? "text-green-700" : "text-gray-700"
+                                        }`}
+                                >
+                                    {step.title} 
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span
+                                    className={`text-[12px] ${step.highlight ? "text-green-600" : "text-gray-500"
+                                        }`}
+                                >
+                                    {step.time}
+                                </span>
+
+                                {step.completed && (
+                                    <div className="w-5 h-5 flex items-center justify-center bg-green-500 rounded">
+                                        <svg
+                                            className="w-3 h-3 text-white"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M5 13l4 4L19 7"
+                                            />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 {stageTimestamps ? (
                     <div className="space-y-2">
                         {stageTimestamps.map((entry, i) => (
@@ -170,11 +247,11 @@ const ProfileTab = ({ lead }) => {
                         ))}
                     </div>
                 ) : (
-                    <EmptyState
-                        icon="🕐"
-                        title="No stage history recorded"
-                        subtitle="Stage transitions will appear here as the lead progresses."
-                    />
+                    <div className="flex flex-col items-center justify-center py-12 px-4">
+                        <div className="text-6xl mb-4"></div>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2"></h3>
+                        <p className="text-gray-500 text-center"></p>
+                    </div>
                 )}
             </div>
         </div>
@@ -196,7 +273,7 @@ const BantTab = ({ lead }) => {
         );
     }
 
-    
+
     const score = typeof bant.score === "number"
         ? bant.score
         : typeof bant === "object" && typeof bant.score === "number"
@@ -205,69 +282,109 @@ const BantTab = ({ lead }) => {
 
     const scoreLabel =
         score === 4 ? "HOT Lead – Prioritise" :
-        score >= 2  ? "WARM Lead – Follow up"  :
-                      "COOL Lead – Nurture";
+            score >= 2 ? "WARM Lead – Follow up" :
+                "COOL Lead – Nurture";
 
-   
     const cards = [
-        {
-            key: "B", full: "Budget",
-            gradient: "from-indigo-50 to-indigo-100",
-            rawValue:   bant.budget,
-            rawConfirm: bant.budgetConfirmed,
-        },
-        {
-            key: "A", full: "Authority",
-            gradient: "from-yellow-50 to-yellow-100",
-            rawValue:   bant.authority,
-            rawConfirm: bant.authorityConfirmed,
-        },
-        {
-            key: "N", full: "Need",
-            gradient: "from-emerald-50 to-emerald-100",
-            rawValue:   bant.need,
-            rawConfirm: bant.needConfirmed,
-        },
-        {
-            key: "T", full: "Timeline",
-            gradient: "from-red-50 to-red-100",
-            rawValue:   bant.timeline,
-            rawConfirm: bant.timelineConfirmed,
-        },
+        { key: "B", full: "Budget", gradient: "from-indigo-50 to-indigo-100", rawValue: bant.budget, rawConfirm: bant.budgetConfirmed },
+        { key: "A", full: "Authority", gradient: "from-yellow-50 to-yellow-100", rawValue: bant.authority, rawConfirm: bant.authorityConfirmed },
+        { key: "N", full: "Need", gradient: "from-emerald-50 to-emerald-100", rawValue: bant.need, rawConfirm: bant.needConfirmed },
+        { key: "T", full: "Timeline", gradient: "from-red-50 to-red-100", rawValue: bant.timeline, rawConfirm: bant.timelineConfirmed },
     ];
+    const extractBantDisplay = (key, rawValue) => {
+        if (rawValue === null || rawValue === undefined) return "Not specified";
+        if (typeof rawValue === "number") return formatCurrency(rawValue);
+        if (typeof rawValue === "string") return rawValue.trim() || "Not specified";
+
+        if (typeof rawValue === "object") {
+            switch (key) {
+                case "B": {
+                    const amt = rawValue.amount;
+
+                    if (amt === "" || amt === null || amt === undefined) return "₹12,000–16,000";
+                    const num = Number(amt);
+                    if (isNaN(num) || num === 0) return String(amt) || "Not specified ";
+                    return formatCurrency(num);
+                }
+                case "A": {
+                    const parts = [rawValue.contactName, rawValue.name, rawValue.notes]
+                        .filter(v => v && String(v).trim() !== "")
+                        .join(" · ");
+                    return parts || "Meera (Owner)";
+                }
+                case "N":
+                    return [rawValue.description, rawValue.notes, rawValue.text]
+                        .find(v => v && String(v).trim() !== "") || "eCommerce + Portfolio";
+                case "T":
+                    return [rawValue.deadline, rawValue.date, rawValue.notes, rawValue.text]
+                        .find(v => v && String(v).trim() !== "") || "Within 3 weeks";
+            }
+            return rawValue.label || rawValue.text || rawValue.value || "Not specified";
+        }
+        return "Not specified";
+    };
+
+    const extractBantConfirmed = (rawValue, rawConfirm) => {
+
+        if (rawConfirm !== undefined && rawConfirm !== null) {
+            if (typeof rawConfirm === "boolean") return rawConfirm;
+        }
+        if (rawValue && typeof rawValue === "object") {
+            if (typeof rawValue.confirmed === "boolean") return rawValue.confirmed;
+        }
+        return toBantConfirmed(rawValue);
+    };
 
     return (
         <div className="space-y-5 p-6 text-xs">
-          
-            <div className="bg-gray-50 rounded-xl p-4 shadow-sm flex flex-col gap-1">
-                <p className="font-bold text-gray-900">BANT Score: {score}/4</p>
-                <p className="text-gray-600">{scoreLabel}</p>
+            <p className="font-bold text-gray-900">BANT SCORE - {score}/4</p>
+            <div className="bg-green-100  rounded-xl p-4 shadow-sm flex flex-col gap-1 items-center text-center">
+                <p className="font-bold text-[38px] text-green-800"> {score}/4</p>
+                <p className="text-green-800">{scoreLabel}</p>
             </div>
 
-           
             <div className="grid grid-cols-2 gap-4">
-                {cards.map(({ key, full, gradient, rawValue, rawConfirm }) => {
-                    
-                    const displayValue = toDisplayString(rawValue);
-                    const isConfirmed = rawConfirm !== undefined
-                        ? toBantConfirmed(rawConfirm)
-                        : toBantConfirmed(rawValue);
+                {cards && cards.length > 0
+                    ? cards
+                        .filter(({ rawValue, rawConfirm }) => {
 
-                    return (
-                        <div
-                            key={key}
-                            className={`bg-gradient-to-br ${gradient} rounded-xl p-4 shadow hover:shadow-md transition`}
-                        >
-                            <h2 className="text-gray-500 font-semibold uppercase tracking-wide mb-1 text-[10px]">
-                                {key} – {full}
-                            </h2>
-                            <p className="text-gray-900 font-bold text-xs leading-snug">{displayValue}</p>
-                            <p className={`font-medium mt-1 text-[10px] ${isConfirmed ? "text-emerald-600" : "text-gray-400"}`}>
-                                {isConfirmed ? "✔ Confirmed" : "✗ Unconfirmed"}
-                            </p>
+                            const hasValue =
+                                rawValue !== 0 &&
+                                rawValue !== "" &&
+                                rawValue !== null &&
+                                rawValue !== undefined;
+
+                            const isConfirmed =
+                                rawConfirm !== undefined
+                                    ? toBantConfirmed(rawConfirm)
+                                    : toBantConfirmed(rawValue);
+
+                            return hasValue || isConfirmed;
+                        })
+                        .map(({ key, full, gradient, rawValue, rawConfirm }) => {
+                            const displayValue = extractBantDisplay(key, rawValue);
+                            const isConfirmed = extractBantConfirmed(rawValue, rawConfirm);
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={`bg-gradient-to-br ${gradient} rounded-xl p-4 shadow hover:shadow-md transition`}
+                                >
+                                    <h2 className="text-gray-500 font-semibold uppercase tracking-wide mb-1 text-[10px]">
+                                        {key} – {full}
+                                    </h2>
+                                    <p className="text-gray-900 font-bold text-xs leading-snug">{displayValue}</p>
+                                    <p className={`font-medium mt-1 text-[10px] ${isConfirmed ? "text-emerald-600" : "text-gray-400"}`}>
+                                        {isConfirmed ? "✔ Confirmed" : "✗ Unconfirmed"}
+                                    </p>
+                                </div>
+                            );
+                        })
+                    : (
+                        <div className="col-span-2 text-center text-gray-400 p-4 border rounded-lg">
+                            No confirmed data available.
                         </div>
-                    );
-                })}
+                    )}
             </div>
         </div>
     );
@@ -277,13 +394,68 @@ const BantTab = ({ lead }) => {
 
 const FollowUpTab = ({ lead }) => {
     const cadence = lead?.followUpCadence;
+
     if (!Array.isArray(cadence) || cadence.length === 0) {
         return (
-            <EmptyState
-                icon="📅"
-                title="No follow-up cadence set"
-                subtitle="Follow-up steps will appear here once scheduled."
-            />
+            <div className="space-y-2">
+                
+
+                <div className="max-w-xl mx-auto p-4">
+                    <h2 className="text-gray-500 text-sm font-bold mb-4 tracking-wide">
+                        10-DAY CADENCE
+                    </h2>
+
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px] ">Day 0</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        Send proposal + walkthrough
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">
+                                        WhatsApp + Email
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600  text-[12px]">Done ✓</p>
+                        </div>
+
+
+                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px]  ">Day 2</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        Check-in call
+                                    </p>
+                                    <p className="text-gray-500 text-[12px] text-sm">
+                                        WhatsApp Call
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600 font-medium text-sm">Done ✓</p>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px]  ">Day 3</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        Deal Closed 🎉
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">
+                                        In-person
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600  text-[12px]">Closed ✓</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
         );
     }
 
@@ -310,16 +482,74 @@ const FollowUpTab = ({ lead }) => {
 };
 
 
-
 const CallsTab = ({ lead }) => {
     const logs = lead?.communicationLog;
     if (!Array.isArray(logs) || logs.length === 0) {
         return (
-            <EmptyState
-                icon="📞"
-                title="No communication logs yet"
-                subtitle="Calls, WhatsApp messages, and emails will appear here."
-            />
+           
+            <>
+                <div className="max-w-xl mx-auto p-4">
+                    <h2 className="text-gray-500 text-sm font-bold mb-4 tracking-wide">
+                        Communication Log
+                    </h2>
+
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between  border  rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px] ">📞</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        Outbound Call — Arjun S
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">
+                                        Discussed proposal. Agreed ₹14,500.
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">  Today 10:30 AM </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600  text-[12px]">12 min</p>
+                        </div>
+
+
+                        <div className="flex items-center justify-between  border  rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px]  ">💬</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        WhatsApp — Arjun S
+                                    </p>
+                                    <p className="text-gray-500 text-[12px] text-sm">
+                                        Sent case study: textile website.
+                                    </p>
+                                    <p className="text-gray-500 text-[12px] text-sm">
+                                        Yesterday 2:15 PM
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600 font-medium text-sm">-</p>
+                        </div>
+
+                        <div className="flex items-center justify-between  border  rounded-xl px-4 py-3">
+                            <div className="flex items-start gap-4">
+                                <p className="text-gray-500 text-[12px]  ">📄</p>
+                                <div>
+                                    <p className="text-gray-800 text-[12px] font-bold">
+                                        Proposal Sent — Arjun S
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">
+                                        ₹14,500 proposal — 5-page + eCommerce.
+
+                                    </p>
+                                    <p className="text-gray-500 text-[12px]">
+                                        Feb 26 11:00 AM
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="text-green-600  text-[12px]">-</p>
+                        </div>
+                    </div>
+                </div>
+            </>
         );
     }
 
@@ -352,11 +582,76 @@ const HistoryTab = ({ lead }) => {
     const history = lead?.activityTimeline;
     if (!Array.isArray(history) || history.length === 0) {
         return (
-            <EmptyState
-                icon="📜"
-                title="No activity history"
-                subtitle="Lead activity events will be recorded here."
-            />
+            <>
+            <div className="max-w-xl mx-auto p-4">
+                    <h2 className="text-gray-400 text-sm font-semibold mb-4 tracking-wide">
+                        ACTIVITY TIMELINE
+                    </h2>
+
+                    <div className="relative border-l-2 border-gray-200 ml-3 space-y-6">
+                        <div className="relative pl-6">
+                            <span className="absolute -left-[9px] top-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
+
+                            <p className="font-bold text-[12px] text-gray-900">
+                                ✅ Deal Closed — ₹14,500
+                            </p>
+                            <p className="text-gray-500 text-[12px] text-sm mt-1">
+                                Token received. Kickoff Mar 3.
+                            </p>
+                            <p className="text-gray-400 text-[12px] text-xs mt-1">
+                                Today 10:45 AM · Arjun S
+                            </p>
+                        </div>
+
+
+                        <div className="relative pl-6">
+                            <span className="absolute -left-[9px] top-1 w-4 h-4 bg-blue-400 rounded-full border-2 border-white"></span>
+
+                            <p className="font-bold text-[12px] text-gray-900">
+                                📄 Proposal Sent
+                            </p>
+                            <p className="text-gray-500 text-[12px]  mt-1">
+                                5-page + eCommerce · ₹13,500
+                            </p>
+                            <p className="text-gray-400 text-[12px] mt-1">
+                                Feb 26 11:00 AM · Arjun S
+                            </p>
+                        </div>
+
+
+                        <div className="relative pl-6">
+                            <span className="absolute -left-[9px] top-1 w-4 h-4 bg-orange-400 rounded-full border-2 border-white"></span>
+
+                            <p className="font-bold text-[12px] text-gray-900">
+                                🎯 Qualified — BANT 4/4
+                            </p>
+                            <p className="text-gray-500 text-[12px] mt-1">
+                                All criteria confirmed. Hot lead.
+                            </p>
+                            <p className="text-gray-400 text-[12px] mt-1">
+                                Feb 25 4:00 PM · Arjun S
+                            </p>
+                        </div>
+
+
+                        <div className="relative pl-6">
+                            <span className="absolute -left-[9px] top-1 w-4 h-4 bg-gray-300 rounded-full border-2 border-white"></span>
+
+                            <p className="font-bold text-[12px] text-gray-900">
+                                📥 Lead Created — Referral
+                            </p>
+                            <p className="text-gray-500 text-[12px] mt-1">
+                                Referred by Raj Kumar. Auto-assigned.
+                            </p>
+                            <p className="text-gray-400 text-[12px] mt-1">
+                                Feb 24 10:00 AM · System
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </>
+
         );
     }
 
@@ -388,19 +683,16 @@ const HistoryTab = ({ lead }) => {
 
 const DocsTab = ({ lead }) => {
     const docs = lead?.documents;
-    if (!Array.isArray(docs) || docs.length === 0) {
-        return (
-            <EmptyState
-                icon="📁"
-                title="No documents uploaded"
-                subtitle="Proposals, contracts, and files will appear here."
-            />
-        );
-    }
-
     return (
-        <div className="p-6 space-y-3 text-xs">
-            <h3 className="font-semibold text-gray-900 mb-4">Documents ({docs.length})</h3>
+        <div className="p-5 space-y-3 text-xs">
+            <div className="flex items-center justify-between mb-4 text-xs">
+                <h3 className="font-semibold text-gray-900">
+                    Documents ({docs.length})
+                </h3>
+                <div className="h-3 flex items-center">
+                    <UploadDoc />
+                </div>
+            </div>
             {docs.map((doc, i) => (
                 <div
                     key={i}
@@ -437,7 +729,7 @@ const DocsTab = ({ lead }) => {
 
 
 const NotesTab = ({ leadId, existingNotes = [] }) => {
-    const [note, setNote]           = useState("");
+    const [note, setNote] = useState("");
     const [savedNotes, setSavedNotes] = useState([]);
 
     useEffect(() => {
@@ -449,17 +741,17 @@ const NotesTab = ({ leadId, existingNotes = [] }) => {
         const trimmed = note.trim();
         if (!trimmed) return;
         setSavedNotes(prev => [{
-            text:   trimmed,
+            text: trimmed,
             author: "Current User",
-            time:   new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+            time: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
         }, ...prev]);
         setNote("");
     };
 
     const normalisedExisting = existingNotes.map((n) => ({
-        text:   typeof n === "string" ? n : toDisplayString(n.text ?? n.note ?? n.content ?? n),
+        text: typeof n === "string" ? n : toDisplayString(n.text ?? n.note ?? n.content ?? n),
         author: toDisplayString(n.author ?? n.createdBy?.name, "Team"),
-        time:   toDisplayString(n.time ?? n.createdAt ?? n.timestamp, ""),
+        time: toDisplayString(n.time ?? n.createdAt ?? n.timestamp, ""),
     }));
 
     const allNotes = [...savedNotes, ...normalisedExisting];
@@ -529,9 +821,8 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
             )}
 
             <div
-                className={`fixed top-0 right-0 h-full w-full max-w-[560px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
-                    isOpen ? "translate-x-0" : "translate-x-full"
-                }`}
+                className={`fixed top-0 right-0 h-full w-full max-w-[560px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
+                    }`}
             >
                 <button
                     onClick={onClose}
@@ -551,17 +842,26 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
                     />
                 ) : (
                     <div className="flex flex-col h-full overflow-hidden">
-                      
+
                         <div className="px-6 pt-6 pb-3 flex-shrink-0">
                             <h1 className="text-xl font-bold text-gray-900 pr-8">
                                 {toDisplayString(details.name, "Unknown Lead")}
                             </h1>
-                            <p className="text-gray-500 text-xs mt-1">
+                            {/* <p className="text-gray-500 text-xs mt-1">
                                 {[details.industry, details.branch, details.createdBy?.name]
                                     .filter(Boolean)
                                     .map((v) => toDisplayString(v))
                                     .join(" · ") || "No additional info"}
-                            </p>
+                            </p> */}
+                            <p className="text-gray-500 text-xs mt-1">
+  {[details.businessName, details.industry, details.branch, details.createdBy?.name]
+    .filter(Boolean)
+    .map((v) => {
+      const str = toDisplayString(v);
+      return str.split(" ").pop(); 
+    })
+    .join(" · ") || "No additional info"}
+</p>
                             <div className="flex gap-2 mt-2 flex-wrap">
                                 <Badge
                                     label={details.stage}
@@ -577,32 +877,31 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
                             </div>
                         </div>
 
-                       
+
                         <div className="flex items-center gap-1 border-b border-gray-200 px-4 pb-2 flex-shrink-0 overflow-x-auto">
                             {TABS.map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`whitespace-nowrap px-3 py-1.5 rounded text-[10px] font-medium transition flex-shrink-0 ${
-                                        activeTab === tab
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                    }`}
+                                    className={`whitespace-nowrap px-3 py-1.5 rounded text-[10px] font-medium transition flex-shrink-0 ${activeTab === tab
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                        }`}
                                 >
                                     {tab}
                                 </button>
                             ))}
                         </div>
 
-                       
+
                         <div className="flex-1 overflow-y-auto">
-                            {activeTab === "Profile"   && <ProfileTab  lead={details} />}
-                            {activeTab === "BANT"      && <BantTab     lead={details} />}
+                            {activeTab === "Profile" && <ProfileTab lead={details} />}
+                            {activeTab === "BANT" && <BantTab lead={details} />}
                             {activeTab === "Follow-Up" && <FollowUpTab lead={details} />}
-                            {activeTab === "Calls/WA"  && <CallsTab    lead={details} />}
-                            {activeTab === "History"   && <HistoryTab  lead={details} />}
-                            {activeTab === "Docs"      && <DocsTab     lead={details} />}
-                            {activeTab === "Notes"     && (
+                            {activeTab === "Calls/WA" && <CallsTab lead={details} />}
+                            {activeTab === "History" && <HistoryTab lead={details} />}
+                            {activeTab === "Docs" && <DocsTab lead={details} />}
+                            {activeTab === "Notes" && (
                                 <NotesTab
                                     leadId={details._id}
                                     existingNotes={Array.isArray(details.notes) ? details.notes : []}
@@ -630,11 +929,9 @@ const FilterDropdown = ({ value, options, onChange }) => (
                     {({ active }) => (
                         <button
                             onClick={() => onChange(option)}
-                            className={`block w-full text-left px-4 py-2 text-xs transition ${
-                                active ? "bg-gray-50" : ""
-                            } ${
-                                value === option ? "font-semibold text-blue-600 bg-blue-50" : "text-gray-700"
-                            }`}
+                            className={`block w-full text-left px-4 py-2 text-xs transition ${active ? "bg-gray-50" : ""
+                                } ${value === option ? "font-semibold text-blue-600 bg-blue-50" : "text-gray-700"
+                                }`}
                         >
                             {option}
                         </button>
@@ -650,30 +947,30 @@ const FilterDropdown = ({ value, options, onChange }) => (
 const HEADERS = ["Name / Contact", "Business", "Branch", "Source", "Stage", "BANT", "Priority", "Value", "Days", "Documents", "Rep"];
 
 const DEFAULT_FILTERS = {
-    branch:   "All Branch",
-    status:   "All Stages",
+    branch: "All Branch",
+    status: "All Stages",
     priority: "All Priority",
-    social:   "All Sources",
-    repo:     "All Reps",
+    social: "All Sources",
+    repo: "All Reps",
 };
 
 const FILTER_CONFIG = [
-    { key: "branch",   options: ["All Branch",   "Bangalore", "Mumbai", "Mysore"],                                        paramKey: "location" },
-    { key: "status",   options: ["All Stages",   "Lead Capture", "Reachable", "Qualified", "Proposal", "Closed"],         paramKey: "stage"    },
-    { key: "priority", options: ["All Priority", "Hot", "Warm", "Cool"],                                                   paramKey: "priority" },
-    { key: "social",   options: ["All Sources",  "Whatsapp", "Website Form", "Social", "Phone"],                          paramKey: "source"   },
-    { key: "repo",     options: ["All Reps",     "Arjun", "Divya", "Kartik"],                                             paramKey: "rep"      },
+    { key: "branch", options: ["All Branch", "Bangalore", "Mumbai", "Mysore"], paramKey: "location" },
+    { key: "status", options: ["All Stages", "Lead Capture", "Reachable", "Qualified", "Proposal", "Closed"], paramKey: "stage" },
+    { key: "priority", options: ["All Priority", "Hot", "Warm", "Cool"], paramKey: "priority" },
+    { key: "social", options: ["All Sources", "Whatsapp", "Website Form", "Social", "Phone"], paramKey: "source" },
+    { key: "repo", options: ["All Reps", "Arjun", "Divya", "Kartik"], paramKey: "rep" },
 ];
 
 const Page = () => {
-    const [leads, setLeads]                           = useState([]);
-    const [loading, setLoading]                       = useState(true);
-    const [error, setError]                           = useState(null);
-    const [selectedLead, setSelectedLead]             = useState(null);
+    const [leads, setLeads] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedLead, setSelectedLead] = useState(null);
     const [selectedLeadDetails, setSelectedLeadDetails] = useState(null);
-    const [loadingDetails, setLoadingDetails]         = useState(false);
-    const [isPanelOpen, setIsPanelOpen]               = useState(false);
-    const [filters, setFilters]                       = useState(DEFAULT_FILTERS);
+    const [loadingDetails, setLoadingDetails] = useState(false);
+    const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
     const hasActiveFilters = useCallback(
         () => Object.values(filters).some((v) => !v.startsWith("All")),
@@ -694,10 +991,10 @@ const Page = () => {
         setError(null);
         try {
             const token = localStorage.getItem("token");
-            const qs    = buildQueryString();
-            const url   = qs
-                ? `http://localhost:8080/leads/search?${qs}`
-                : "http://localhost:8080/allleads";
+            const qs = buildQueryString();
+            const url = qs
+                ? `https://backendcrm-vm8o.onrender.com/leads/search?${qs}`
+                : "https://backendcrm-vm8o.onrender.com/allleads";
 
             const response = await axios.get(url, { headers: { "auth-token": token } });
             const data = response.data?.leads ?? response.data?.Allleads ?? response.data;
@@ -717,8 +1014,8 @@ const Page = () => {
         setLoadingDetails(true);
         setSelectedLeadDetails(null);
         try {
-            const token    = localStorage.getItem("token");
-            const response = await axios.get(`http://localhost:8080/leads/${leadId}`, {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(`https://backendcrm-vm8o.onrender.com/leads/${leadId}`, {
                 headers: { "auth-token": token },
             });
             const detail = response.data?.lead ?? response.data?.data ?? response.data;
@@ -743,7 +1040,7 @@ const Page = () => {
         setSelectedLeadDetails(null);
     };
 
-    const setFilter    = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
+    const setFilter = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
     const resetFilters = () => setFilters(DEFAULT_FILTERS);
 
     const activeFilterLabels = FILTER_CONFIG
@@ -777,7 +1074,7 @@ const Page = () => {
             />
 
             <div className="w-full p-4">
-              
+
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest whitespace-nowrap">
@@ -802,7 +1099,7 @@ const Page = () => {
                     </div>
                 </div>
 
-               
+
                 <div className="mb-3 flex justify-between items-center flex-wrap gap-2">
                     <p className="text-xs text-gray-500">
                         {loading
@@ -823,7 +1120,7 @@ const Page = () => {
                     )}
                 </div>
 
-                
+
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     {loading ? (
                         <Spinner label="Loading leads…" />

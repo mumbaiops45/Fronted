@@ -258,7 +258,7 @@
 //     useEffect(() => {
 //         const fetchDashboard = async () => {
 //             try {
-//                 const response = await fetch('http://localhost:8080/getdashboards');
+//                 const response = await fetch('https://backendcrm-vm8o.onrender.com/getdashboards');
 //                 const data = await response.json();
 //                 setDashboardData(data);
 //                 setLoading(false);
@@ -500,7 +500,7 @@ const Page = () => {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const response = await fetch('http://localhost:8080/getdashboardss');
+                const response = await fetch('https://backendcrm-vm8o.onrender.com/getdashboardss');
                 const data = await response.json();
                 setDashboardData(data);
                 setLoading(false);

@@ -8,7 +8,7 @@ const ShowPayment = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/payments')
+    axios.get('https://backendcrm-vm8o.onrender.com/payments')
       .then((response) => {
         setPayments(response.data.payments);
         setLoading(false);

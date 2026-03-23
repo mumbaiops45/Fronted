@@ -40,7 +40,7 @@ export default function LeadDetails() {
     async function fetchActivities() {
       try {
         const token = localStorage.getItem("token")
-        const res = await axios.get("http://localhost:8080/get", {
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/get", {
           headers: { "auth-token": token },
         })
         if (res.data.success) {

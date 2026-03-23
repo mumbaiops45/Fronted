@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const API = "http://localhost:8080";
+const API = "https://backendcrm-vm8o.onrender.com";
 
 function getToken() {
   if (typeof window === "undefined") return "";
@@ -122,7 +122,7 @@ export default function Page() {
   useEffect(() => {
     const Activity = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/getrecent");
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/getrecent");
         setshowactivity(res.data.activities);
       } catch (error) { console.log(error.message); }
     }
@@ -132,11 +132,11 @@ export default function Page() {
   const handleViewAll = async () => {
     try {
       if (!showAll) {
-        const res = await axios.get("http://localhost:8080/last20day");
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/last20day");
         setshowactivity(res.data.activities);
         setShowAll(true);
       } else {
-        const res = await axios.get("http://localhost:8080/getrecent");
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/getrecent");
         setshowactivity(res.data.activities);
         setShowAll(false);
       }
@@ -152,7 +152,7 @@ export default function Page() {
 
       if (!token) return;
 
-      const response = await axios.get("http://localhost:8080/countdocument", {
+      const response = await axios.get("https://backendcrm-vm8o.onrender.com/countdocument", {
         headers: {
           "auth-token": token
         }

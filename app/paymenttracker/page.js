@@ -28,7 +28,7 @@ export default function Page() {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const res = await fetch("http://localhost:8080/getdashboards")
+                const res = await fetch("https://backendcrm-vm8o.onrender.com/getdashboards")
                 if (!res.ok) throw new Error("Failed to fetch dashboard data")
                 const data = await res.json()
                 

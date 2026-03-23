@@ -187,8 +187,8 @@ const Page = () => {
 
            
             const url = cityValue === "All"
-                ? "http://localhost:8080/allleads"
-                : `http://localhost:8080/branch/search?location=${cityValue}`;
+                ? "https://backendcrm-vm8o.onrender.com/allleads"
+                : `https://backendcrm-vm8o.onrender.com/branch/search?location=${cityValue}`;
 
             const response = await axios.get(url, { headers: { "auth-token": token } });
 

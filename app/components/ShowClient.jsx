@@ -11,7 +11,7 @@ const ShowClient = () => {
     useEffect(() => {
         const fetchClients = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/allclients")
+                const res = await axios.get("https://backendcrm-vm8o.onrender.com/allclients")
                 setClients(res.data.AllClients || [])
             } catch (err) {
                 console.error(err)

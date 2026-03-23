@@ -16,18 +16,23 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(" ");
+
+
 
   useEffect(() => {
-    const checkLogin = () => {
+    const checkLogin = () =>{
       const token = localStorage.getItem("token");
+      const role = localStorage.getItem("role");
       setIsLoggedIn(!!token);
+      setUserRole(role);
     };
 
     checkLogin();
     window.addEventListener("storage", checkLogin);
 
     return () => window.removeEventListener("storage", checkLogin);
-  }, []);
+  },[]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -42,6 +47,29 @@ const Navbar = () => {
         ? "bg-blue-100 text-blue-600"
         : "text-gray-800 hover:bg-gray-100 hover:text-black"
     }`;
+
+    const roleMap = {
+      master: {
+        name: "Master Admin",
+        desc: "All Branches",
+        badge: "MASTER",
+      },
+      manager: {
+        name: "Branch Manager",
+        desc: "Branch View",
+        badge: "MANAGER",
+      },
+      rep: {
+        name: "Sales Rep",
+        desc: "Own Leads",
+        badge: "REP",
+      },
+      viewer: {
+        name: "Viewer",
+        desc: "Read Only",
+        Badge: "VIEWER"
+      }
+    }
 
   return (
     <nav className="w-64 h-screen fixed left-0 top-0 bg-white overflow-y-auto scrollbar-hide">
@@ -115,7 +143,6 @@ const Navbar = () => {
               <MdLeaderboard className="mr-2" />
               Leaderboard
             </Link>
-
             <Link href="/paymenttracker" className={linkClass("/paymenttracker")}>
               <MdLeaderboard className="mr-2" />
               Payment Track
@@ -126,17 +153,13 @@ const Navbar = () => {
               Revenue Dashboard
             </Link>
           </div>
-
-     
           <Link href="/branchreport" className={linkClass("/branchreport")}>
             <BsFileBarGraphFill className="mr-2" />
             Branch Report
           </Link>
         </div>
-
-      
         <div className="flex flex-col space-y-3 mt-auto">
-          {!isLoggedIn ? (
+          {/* {!isLoggedIn ? (
             <>
               <Link href="/login" className={linkClass("/login")}>
                 Login
@@ -153,7 +176,35 @@ const Navbar = () => {
             >
               Logout
             </button>
-          )}
+          )} */}
+
+          {!isLoggedIn ? (
+            <>
+            <Link href="/login" className={linkClass("/login")}>Login</Link>
+ 
+            <Link href="/signup" className={linkClass("/signup")}>Signup</Link>
+            </>
+          ) :(
+            <div 
+            onClick={handleLogout}
+            className="flex items-center gap-3  rounded-lg cursor-pointer hover: bg-gray-100 transition">
+
+              <div className="w-10 h-10 bg-orange-400 text-white rounded-full flex items-center justify-center font-bold">
+                {userRole?.slice(0,2).toUpperCase()}
+              </div>
+               <div className="flex flex-col leading-tight">
+                <span className="text-[12px] font-bold">
+                  {roleMap[userRole]?.name}
+                </span>
+                <span className="text-xs text-gray-500">{roleMap[userRole]?.desc}</span>
+               </div>
+
+               <span className="ml-auto text-[10px] px-2 py-1 bg-yellow-400 rounded-full font-bold">
+                {roleMap[userRole]?.badge}
+               </span>
+            </div>
+          )
+        }
         </div>
       </div>
     </nav>

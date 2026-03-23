@@ -52,7 +52,7 @@ const Page = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:8080/viewdocument", {
+      const response = await axios.get("https://backendcrm-vm8o.onrender.com/viewdocument", {
         headers: {
           "auth-token": token
         }
@@ -109,7 +109,7 @@ const Page = () => {
 
       if (!token) return;
 
-      const response = await axios.get("http://localhost:8080/countdocument", {
+      const response = await axios.get("https://backendcrm-vm8o.onrender.com/countdocument", {
         headers: {
           "auth-token": token
         }
@@ -146,7 +146,7 @@ const Page = () => {
   //       return;
   //     }
 
-  //     const fileUrl = `http://localhost:8080/viewdocument/${docId}`;
+  //     const fileUrl = `https://backendcrm-vm8o.onrender.com/viewdocument/${docId}`;
 
   //     const response = await axios.get(fileUrl, {
   //       headers: { "auth-token": token },
@@ -199,7 +199,7 @@ const Page = () => {
 
       try {
         console.log("Attempt 1: Trying query parameter endpoint...");
-        endpointUsed = `http://localhost:8080/download?id=${docId}`;
+        endpointUsed = `https://backendcrm-vm8o.onrender.com/download?id=${docId}`;
         console.log("Endpoint:", endpointUsed);
 
         response = await axios.get(endpointUsed, {
@@ -222,7 +222,7 @@ const Page = () => {
 
         try {
           console.log("Attempt 2: Trying path parameter endpoint...");
-          endpointUsed = `http://localhost:8080/download/${docId}`;
+          endpointUsed = `https://backendcrm-vm8o.onrender.com/download/${docId}`;
           console.log("Endpoint:", endpointUsed);
 
           response = await axios.get(endpointUsed, {
@@ -245,7 +245,7 @@ const Page = () => {
 
           try {
             console.log("Attempt 3: Trying download with document parameter...");
-            endpointUsed = `http://localhost:8080/download?docId=${docId}`;
+            endpointUsed = `https://backendcrm-vm8o.onrender.com/download?docId=${docId}`;
             console.log("Endpoint:", endpointUsed);
 
             response = await axios.get(endpointUsed, {
@@ -388,7 +388,7 @@ const Page = () => {
 
       console.log("Deleting document:", docId);
 
-      const response = await axios.delete(`http://localhost:8080/${docId}`, {
+      const response = await axios.delete(`https://backendcrm-vm8o.onrender.com/${docId}`, {
         headers: {
           "auth-token": token
         }
@@ -488,7 +488,7 @@ const Page = () => {
     setUploadMessage(`Uploading "${file.name}"...`);
 
     try {
-      const response = await axios.post("http://localhost:8080/document", formData, {
+      const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", formData, {
         headers: {
           "auth-token": token,
           "Content-Type": "multipart/form-data",

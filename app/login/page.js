@@ -26,7 +26,7 @@ const page = () => {
         e.preventDefault();
         console.log("submit data", formdd)
         try {
-            const res = await axios.post("http://localhost:8080/login", formdd);
+            const res = await axios.post("https://backendcrm-vm8o.onrender.com/login", formdd);
             localStorage.setItem("token", res.data.Authtoken);
             router.push('/');
         } catch (error) {

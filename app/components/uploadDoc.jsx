@@ -72,7 +72,7 @@ const UploadDoc = () => {
                 return alert("Please login first");
             }
 
-            const response = await axios.post("http://localhost:8080/document", formData, {
+            const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "auth-token": token,

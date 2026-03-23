@@ -98,7 +98,7 @@ const AddLead = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:8080/create", payload, {
+            const response = await axios.post("https://backendcrm-vm8o.onrender.com/create", payload, {
                 headers: { "auth-token": token }
             })
             console.log("Success:", response.data)
@@ -160,7 +160,7 @@ const AddLead = () => {
             const token = localStorage.getItem("token")
             if (!token) { alert("Please login first"); setLoading(false); return }
 
-            const response = await axios.post("http://localhost:8080/document", uploadData, {
+            const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", uploadData, {
                 headers: { "Content-Type": "multipart/form-data", "auth-token": token },
             })
             console.log("Upload successful:", response.data)

@@ -9,9 +9,7 @@ import {
     PieChart, Pie, Cell,
 } from "recharts";
 
-/* ----------------------------------------
-COLOR CONSTANTS
------------------------------------------*/
+
 
 const BRANCH_COLORS = {
     Bangalore: "#4a90e2",
@@ -85,7 +83,7 @@ export default function Page() {
             try {
                 const token = localStorage.getItem("token");
 
-                const res = await fetch("http://localhost:8080/allleads", {
+                const res = await fetch("https://backendcrm-vm8o.onrender.com/allleads", {
                     headers: { "auth-token": token || "" },
                 });
 

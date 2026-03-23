@@ -11,11 +11,12 @@ import AddProposal from "./components/AddProposal";
 import ShowClient from "./components/ShowClient";
 import ShowPayment from "./components/ShowPayment";
 import Dashboard from "./components/Dashboard";
+import Homepage from "./components/Homepage";
 
 export default function Home() {
   return (
     <>
-    <h1>This is Home Page</h1>
+    {/* <h1>This is Home Page</h1> */}
 
     {/* <UploadDoc/>
     <LeadDetails/> */}
@@ -24,7 +25,8 @@ export default function Home() {
     {/* <AddProposal/> */}
     {/* <ShowClient/> */}
     {/* <ShowPayment/> */}
-    <Dashboard />
+    {/* <Dashboard /> */}
+    <Homepage/>
     </>
   );
 }

@@ -18,7 +18,7 @@ const Page = () => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("http://localhost:8080/performance", {
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/performance", {
           headers: {
             "auth-token": token,
           },
@@ -61,7 +61,7 @@ const Page = () => {
     const Revenuess = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("http://localhost:8080/projection", {
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/projection", {
           headers: {
             "auth-token": token
           }
@@ -86,7 +86,7 @@ const Page = () => {
       const token = localStorage.getItem("token");
 
       try {
-        const res = await axios.get("http://localhost:8080/branch", {
+        const res = await axios.get("https://backendcrm-vm8o.onrender.com/branch", {
           headers: {
             "auth-token": token
           }
