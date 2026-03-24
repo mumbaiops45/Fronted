@@ -1,5 +1,3 @@
-
-
 "use client"
 
 import React, { useState, useEffect } from "react";
@@ -7,12 +5,20 @@ import { MdDelete } from "react-icons/md";
 import { AiFillEye, AiOutlineArrowDown } from "react-icons/ai";
 import axios from "axios";
 import UploadDoc from "../components/uploadDoc";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const formatDate = (isoDate) => {
   const date = new Date(isoDate);
   const options = { month: "short", day: "numeric" };
   return date.toLocaleDateString("en-US", options);
 };
+
+const predefinedClients = [
+  "Meera Textiles",
+  "Sri Krishna Hotel",
+  "Ravi Kumar Foods",
+];
+
 
 const categories = [
   { name: "All", color: "#0066ff" },
@@ -52,7 +58,8 @@ const Page = () => {
         return;
       }
 
-      const response = await axios.get("https://backendcrm-vm8o.onrender.com/viewdocument", {
+      // const response = await axios.get("http://localhost:8080/viewdocument", {
+       const response = await axios.get(`${BASE_URL}/viewdocument`, {
         headers: {
           "auth-token": token
         }
@@ -78,14 +85,27 @@ const Page = () => {
         setStats(newStats);
 
 
-        const uniqueClients = Array.from(
-          new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
-        ).map((businessName) => ({
-          value: businessName,
-          label: businessName,
-        }));
+        // const uniqueClients = Array.from(
+        //   new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
+        // ).map((businessName) => ({
+        //   value: businessName,
+        //   label: businessName,
+        // }));
 
-        setClientsList([{ value: "", label: "All Clients" }, ...uniqueClients]);
+        // setClientsList([{ value: "", label: "All 123 Clients" }, ...uniqueClients]);
+        const uniqueClientsFromApi = Array.from(
+  new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
+);
+
+const combinedClients = Array.from(new Set([...predefinedClients, ...uniqueClientsFromApi]));
+
+const clientsDropdown = combinedClients.map((businessName) => ({
+  value: businessName,
+  label: businessName,
+}));
+
+
+setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
       }
     } catch (err) {
       console.error("Error fetching documents:", err);
@@ -109,7 +129,8 @@ const Page = () => {
 
       if (!token) return;
 
-      const response = await axios.get("https://backendcrm-vm8o.onrender.com/countdocument", {
+      // const response = await axios.get("http://localhost:8080/countdocument", {
+       const response = await axios.get(`${BASE_URL}/countdocument`, {
         headers: {
           "auth-token": token
         }
@@ -146,7 +167,7 @@ const Page = () => {
   //       return;
   //     }
 
-  //     const fileUrl = `https://backendcrm-vm8o.onrender.com/viewdocument/${docId}`;
+  //     const fileUrl = `http://localhost:8080/viewdocument/${docId}`;
 
   //     const response = await axios.get(fileUrl, {
   //       headers: { "auth-token": token },
@@ -199,7 +220,8 @@ const Page = () => {
 
       try {
         console.log("Attempt 1: Trying query parameter endpoint...");
-        endpointUsed = `https://backendcrm-vm8o.onrender.com/download?id=${docId}`;
+        // endpointUsed = `http://localhost:8080/download?id=${docId}`;
+         endpointUsed = `${BASE_URL}/download?id=${docId}`;
         console.log("Endpoint:", endpointUsed);
 
         response = await axios.get(endpointUsed, {
@@ -222,7 +244,8 @@ const Page = () => {
 
         try {
           console.log("Attempt 2: Trying path parameter endpoint...");
-          endpointUsed = `https://backendcrm-vm8o.onrender.com/download/${docId}`;
+          // endpointUsed = `http://localhost:8080/download/${docId}`;
+          endpointUsed = `${BASE_URL}/download/${docId}`;
           console.log("Endpoint:", endpointUsed);
 
           response = await axios.get(endpointUsed, {
@@ -245,7 +268,8 @@ const Page = () => {
 
           try {
             console.log("Attempt 3: Trying download with document parameter...");
-            endpointUsed = `https://backendcrm-vm8o.onrender.com/download?docId=${docId}`;
+            // endpointUsed = `http://localhost:8080/download?docId=${docId}`;
+            endpointUsed = `${BASE_URL}/download?docId=${docId}`;
             console.log("Endpoint:", endpointUsed);
 
             response = await axios.get(endpointUsed, {
@@ -388,7 +412,8 @@ const Page = () => {
 
       console.log("Deleting document:", docId);
 
-      const response = await axios.delete(`https://backendcrm-vm8o.onrender.com/${docId}`, {
+      // const response = await axios.delete(`http://localhost:8080/${docId}`, {
+      const response = await axios.delete(`${BASE_URL}/${docId}`, {
         headers: {
           "auth-token": token
         }
@@ -425,8 +450,8 @@ const Page = () => {
 
   const getDocTypeColor = (docType) => {
     switch (docType) {
-      case "Invoice": return "#3ac47d";
-      case "Quotation": return "#4a90e2";
+      case "Invoice": return "#aee8ca";
+      case "Quotation": return "#4a90e2";  
       case "MoM": return "#f0ad4e";
       case "Client Input": return "#b584f6";
       default: return "#b584f6";
@@ -488,7 +513,8 @@ const Page = () => {
     setUploadMessage(`Uploading "${file.name}"...`);
 
     try {
-      const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", formData, {
+      // const response = await axios.post("http://localhost:8080/document", formData, {
+       const response = await axios.post(`${BASE_URL}/document`, formData, {
         headers: {
           "auth-token": token,
           "Content-Type": "multipart/form-data",
@@ -552,20 +578,20 @@ const Page = () => {
 
 
       <div className="flex-1 ">
-        <div className="flex gap-1 text-[10px] ">
+        <div className="flex gap-1 font-bold text-[8px] ">
           {categories.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setActiveCategory(cat.name)}
               className={`px-2 py-1 rounded-md border-none cursor-pointer font-normal text-sm flex items-center gap-1.5 transition-all ${activeCategory === cat.name
                 ? 'text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-white text-gray-700 hover:bg-gray-200'
                 }`}
               style={{
                 backgroundColor: activeCategory === cat.name ? cat.color : undefined
               }}
             >
-              <span> {getDocTypeIcon(cat.name)}</span>
+              <span className="text-xl"> {getDocTypeIcon(cat.name)}</span>
 
               <span>{cat.name}  </span>
               <span className="ml-1">
@@ -582,7 +608,7 @@ const Page = () => {
             id="client-select"
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
-            className="px-2 py-1 rounded-md border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 w-32 h-10"
+            className="px-2 py-1 rounded-md border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 w-32 h-7"
           >
             {clientsList.map((client) => (
               <option key={client.value} value={client.value}>
@@ -647,7 +673,7 @@ const Page = () => {
                   </button>
                 </div>
                 <div
-                  className="text-xs"
+                  className="text-2xl"
                   style={{ color: getDocTypeColor(doc.docType) }}
                 >
                   {getDocTypeIcon(doc.docType)}
@@ -661,7 +687,7 @@ const Page = () => {
                   }).format(doc.dealValue) : 'N/A'} .{formatDate(doc.docDate)}</div>
                 </div>
                 <div
-                  className="self-start px-3 py-1 rounded-full text-[11px] font-semibold text-white"
+                  className="self-start px-3 py-1 rounded-full text-[11px] font-bold text-green"
                   style={{
                     backgroundColor: getDocTypeColor(doc.docType)
                   }}
@@ -775,7 +801,7 @@ const Page = () => {
                 style={{ color: cat.color, boxShadow: `0 0 4px ${cat.color}50` }}
               >
                 <span className="flex items-center gap-2 text-[12px]">
-                  <span>{getDocTypeIcon(cat.name)}</span>
+                  <span className="text-xl">{getDocTypeIcon(cat.name)}</span>
                   <span>{cat.name}</span>
                 </span>
                 <span
@@ -808,9 +834,9 @@ const Page = () => {
               key={index}
               className="bg-gray-50 rounded-xl p-2.5 mb-2 flex items-center gap-3 shadow-sm border border-gray-100"
             >
-              {/* Doc Type Icon */}
+              
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0  "
                 style={{ backgroundColor: `${getDocTypeColor(doc.docType)}20` }}
               >
                 {getDocTypeIcon(doc.docType)}
@@ -824,9 +850,9 @@ const Page = () => {
                 </span>
               </div>
 
-              {/* Doc Type Badge */}
+             
               <span
-                className="text-white rounded-full px-2 py-0.5 text-[9px] font-semibold flex-shrink-0"
+                className="text-green rounded-full px-2 py-0.5 text-[9px] font-semibold flex-shrink-0"
                 style={{ backgroundColor: getDocTypeColor(doc.docType) }}
               >
                 {doc.docType}

@@ -5,6 +5,7 @@ import Newpayment from "../components/Newpayment"
 import AddClient from "../components/AddClient"
 import ShowClient from "../components/ShowClient"
 import ShowPayment from "../components/ShowPayment"
+import { BASE_URL } from "@/utils/axiosInstance"
 
 const StatCard = ({ title, value, subtitle, color }) => {
     return (
@@ -28,7 +29,8 @@ export default function Page() {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const res = await fetch("https://backendcrm-vm8o.onrender.com/getdashboards")
+                // const res = await fetch("http://localhost:8080/getdashboards")
+                const res = await fetch(`${BASE_URL}/getdashboards`)
                 if (!res.ok) throw new Error("Failed to fetch dashboard data")
                 const data = await res.json()
                 

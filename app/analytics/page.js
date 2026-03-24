@@ -8,6 +8,7 @@ import {
     AreaChart, Area, ResponsiveContainer,
     PieChart, Pie, Cell,
 } from "recharts";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 
 
@@ -74,16 +75,15 @@ export default function Page() {
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    /* ----------------------------------------
-    FETCH DATA
-    -----------------------------------------*/
+    
 
     useEffect(() => {
         (async () => {
             try {
                 const token = localStorage.getItem("token");
 
-                const res = await fetch("https://backendcrm-vm8o.onrender.com/allleads", {
+                // const res = await fetch("http://localhost:8080/allleads", {
+                const res = await fetch(`${BASE_URL}/allleads`,{
                     headers: { "auth-token": token || "" },
                 });
 

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const UploadDoc = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -72,7 +73,8 @@ const UploadDoc = () => {
                 return alert("Please login first");
             }
 
-            const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", formData, {
+            // const response = await axios.post("http://localhost:8080/document", formData, {
+            const response = await axios.post(`${BASE_URL}/document`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "auth-token": token,
@@ -95,9 +97,9 @@ const UploadDoc = () => {
         <div className="p-6">
             <button
                 onClick={() => setModalOpen(true)}
-                className="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition"
+                className="px-4 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition"
             >
-                Upload Document
+               + Upload
             </button>
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center  ">

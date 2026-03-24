@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect } from "react"
 import axios from "axios"
+import { BASE_URL } from "@/utils/axiosInstance"
 
 
 function timeAgo(dateString) {
@@ -40,7 +41,8 @@ export default function LeadDetails() {
     async function fetchActivities() {
       try {
         const token = localStorage.getItem("token")
-        const res = await axios.get("https://backendcrm-vm8o.onrender.com/get", {
+        // const res = await axios.get("http://localhost:8080/get", {
+        const res = await axios.get(`${BASE_URL}/get`, {
           headers: { "auth-token": token },
         })
         if (res.data.success) {

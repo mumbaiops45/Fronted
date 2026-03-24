@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { BASE_URL } from '@/utils/axiosInstance'
 
 const AddLead = () => {
     const router = useRouter()
@@ -98,7 +99,8 @@ const AddLead = () => {
         }
 
         try {
-            const response = await axios.post("https://backendcrm-vm8o.onrender.com/create", payload, {
+            // const response = await axios.post("http://localhost:8080/create", payload, {
+             const response = await axios.post(`${BASE_URL}/create`, payload, {
                 headers: { "auth-token": token }
             })
             console.log("Success:", response.data)
@@ -160,7 +162,7 @@ const AddLead = () => {
             const token = localStorage.getItem("token")
             if (!token) { alert("Please login first"); setLoading(false); return }
 
-            const response = await axios.post("https://backendcrm-vm8o.onrender.com/document", uploadData, {
+            const response = await axios.post(`${BASE_URL}/document`, uploadData, {
                 headers: { "Content-Type": "multipart/form-data", "auth-token": token },
             })
             console.log("Upload successful:", response.data)

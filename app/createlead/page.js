@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const page = () => {
      const router = useRouter();
@@ -50,7 +51,8 @@ const page = () => {
 
     try {
         const resp = await axios.post(
-            "https://backendcrm-vm8o.onrender.com/create",
+            // "http://localhost:8080/create",
+            `${BASE_URL}/create`,
             formData,
             {
                 headers: {

@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '@/utils/axiosInstance';
 
 const ShowPayment = () => {
   const [payments, setPayments] = useState([]);
@@ -8,7 +9,8 @@ const ShowPayment = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('https://backendcrm-vm8o.onrender.com/payments')
+    // axios.get('http://localhost:8080/payments')
+    axios.get(`${BASE_URL}/payments`)
       .then((response) => {
         setPayments(response.data.payments);
         setLoading(false);

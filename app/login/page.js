@@ -4,6 +4,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { BASE_URL } from '@/utils/axiosInstance';
 
 const page = () => {
 
@@ -26,7 +27,8 @@ const page = () => {
         e.preventDefault();
         console.log("submit data", formdd)
         try {
-            const res = await axios.post("https://backendcrm-vm8o.onrender.com/login", formdd);
+            // const res = await axios.post("http://localhost:8080/login", formdd);
+            const res = await axios.post(`${BASE_URL}/login`, formdd);
             localStorage.setItem("token", res.data.Authtoken);
             router.push('/');
         } catch (error) {

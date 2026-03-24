@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const Homepage = () => {
   const router = useRouter();
@@ -41,7 +42,8 @@ const Homepage = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post("https://backendcrm-vm8o.onrender.com/login", {
+      // const res = await axios.post("http://localhost:8080/login", {
+      const res = await axios.post(`${BASE_URL}/login`, {
         email: form.email,
         password: form.password,
         role: role,

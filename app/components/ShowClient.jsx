@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { BASE_URL } from '@/utils/axiosInstance'
 
 const ShowClient = () => {
     const [clients, setClients] = useState([])
@@ -11,7 +12,8 @@ const ShowClient = () => {
     useEffect(() => {
         const fetchClients = async () => {
             try {
-                const res = await axios.get("https://backendcrm-vm8o.onrender.com/allclients")
+                // const res = await axios.get("http://localhost:8080/allclients")
+                const res = await axios.get(`${BASE_URL}/allclients`)
                 setClients(res.data.AllClients || [])
             } catch (err) {
                 console.error(err)
@@ -24,7 +26,7 @@ const ShowClient = () => {
         fetchClients()
     }, [])
 
-    // Helper to format numbers in Indian Rupees format
+    
     const formatINR = (num) => `₹${Number(num || 0).toLocaleString('en-IN')}`
 
     if (loading) {

@@ -5,6 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import axios from "axios";
+import { BASE_URL } from '@/utils/axiosInstance';
 
 
 const CITIES = [
@@ -187,8 +188,10 @@ const Page = () => {
 
            
             const url = cityValue === "All"
-                ? "https://backendcrm-vm8o.onrender.com/allleads"
-                : `https://backendcrm-vm8o.onrender.com/branch/search?location=${cityValue}`;
+                // ? "http://localhost:8080/allleads"
+                // : `http://localhost:8080/branch/search?location=${cityValue}`;
+                ? `${BASE_URL}/allleads`
+                : `${BASE_URL}/branch/search?location=${cityValue}`;
 
             const response = await axios.get(url, { headers: { "auth-token": token } });
 

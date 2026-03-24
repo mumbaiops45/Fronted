@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const AVATAR_COLORS = ["#f0ad4e", "#4a90e2", "#3ac47d", "#ee813d", "#9b59b6", "#1abc9c"];
 const RANK_COLORS = { 1: "#f0ad4e", 2: "#94a3b8", 3: "#cd7f32" };
@@ -99,7 +100,8 @@ export default function Page() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get("https://backendcrm-vm8o.onrender.com/leaderboard");
+        // const response = await axios.get("http://localhost:8080/leaderboard");
+        const response = await axios.get(`${BASE_URL}/leaderboard`);
         console.log("Leaderboard response:", response.data);
         let leaderboardData = [];
         if (response.data.success && response.data.data) {
@@ -123,7 +125,8 @@ export default function Page() {
     const fetchLeads = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("https://backendcrm-vm8o.onrender.com/allleads", {
+        // const response = await fetch("http://localhost:8080/allleads", {
+        const response = await fetch(`${BASE_URL}/allleads`, {
           headers: { 
             "auth-token": token || "",
             "Content-Type": "application/json"

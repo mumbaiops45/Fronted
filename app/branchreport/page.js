@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 
 const stageColors = {
@@ -18,7 +19,8 @@ const Page = () => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("https://backendcrm-vm8o.onrender.com/performance", {
+        // const res = await axios.get("http://localhost:8080/performance", {
+        const res = await axios.get(`${BASE_URL}/performance`, {
           headers: {
             "auth-token": token,
           },
@@ -61,7 +63,8 @@ const Page = () => {
     const Revenuess = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("https://backendcrm-vm8o.onrender.com/projection", {
+        // const res = await axios.get("http://localhost:8080/projection", {
+        const res = await axios.get(`${BASE_URL}/projection`, {
           headers: {
             "auth-token": token
           }
@@ -86,7 +89,8 @@ const Page = () => {
       const token = localStorage.getItem("token");
 
       try {
-        const res = await axios.get("https://backendcrm-vm8o.onrender.com/branch", {
+        // const res = await axios.get("http://localhost:8080/branch", {
+        const res = await axios.get(`${BASE_URL}/branch`, {
           headers: {
             "auth-token": token
           }

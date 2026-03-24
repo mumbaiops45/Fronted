@@ -5,6 +5,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import axios from "axios";
 import UploadDoc from "../components/uploadDoc";
+import { BASE_URL } from "@/utils/axiosInstance";
 
 const formatCurrency = (value) => {
     if (!value && value !== 0) return "₹ 0";
@@ -16,8 +17,6 @@ const daysSince = (dateStr) => {
     const diff = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
     return `${diff}d`;
 };
-
-
 
 const steps = [
     {
@@ -47,7 +46,7 @@ const steps = [
     },
 ];
 
-
+const showOnlyUpload = true;
 
 const toDisplayString = (val, fallback = "Not specified") => {
     if (val === null || val === undefined) return fallback;
@@ -138,6 +137,7 @@ const Badge = ({ label, colorClass = "bg-gray-100 text-gray-700" }) => (
 );
 
 
+
 const ProfileTab = ({ lead }) => {
     if (!lead) return <EmptyState icon="👤" title="No profile data available" />;
 
@@ -195,7 +195,7 @@ const ProfileTab = ({ lead }) => {
                                     className={`text-[12px] font-medium ${step.highlight ? "text-green-700" : "text-gray-700"
                                         }`}
                                 >
-                                    {step.title} 
+                                    {step.title}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -398,7 +398,7 @@ const FollowUpTab = ({ lead }) => {
     if (!Array.isArray(cadence) || cadence.length === 0) {
         return (
             <div className="space-y-2">
-                
+
 
                 <div className="max-w-xl mx-auto p-4">
                     <h2 className="text-gray-500 text-sm font-bold mb-4 tracking-wide">
@@ -454,7 +454,7 @@ const FollowUpTab = ({ lead }) => {
                     </div>
                 </div>
 
-                
+
             </div>
         );
     }
@@ -486,7 +486,7 @@ const CallsTab = ({ lead }) => {
     const logs = lead?.communicationLog;
     if (!Array.isArray(logs) || logs.length === 0) {
         return (
-           
+
             <>
                 <div className="max-w-xl mx-auto p-4">
                     <h2 className="text-gray-500 text-sm font-bold mb-4 tracking-wide">
@@ -583,7 +583,7 @@ const HistoryTab = ({ lead }) => {
     if (!Array.isArray(history) || history.length === 0) {
         return (
             <>
-            <div className="max-w-xl mx-auto p-4">
+                <div className="max-w-xl mx-auto p-4">
                     <h2 className="text-gray-400 text-sm font-semibold mb-4 tracking-wide">
                         ACTIVITY TIMELINE
                     </h2>
@@ -690,7 +690,7 @@ const DocsTab = ({ lead }) => {
                     Documents ({docs.length})
                 </h3>
                 <div className="h-3 flex items-center">
-                    <UploadDoc />
+                    <UploadDoc  />
                 </div>
             </div>
             {docs.map((doc, i) => (
@@ -727,8 +727,7 @@ const DocsTab = ({ lead }) => {
 };
 
 
-
-const NotesTab = ({ leadId, existingNotes = [] }) => {
+const NotesTab = ({ leadId, existingNotes = "" }) => {
     const [note, setNote] = useState("");
     const [savedNotes, setSavedNotes] = useState([]);
 
@@ -748,13 +747,39 @@ const NotesTab = ({ leadId, existingNotes = [] }) => {
         setNote("");
     };
 
-    const normalisedExisting = existingNotes.map((n) => ({
-        text: typeof n === "string" ? n : toDisplayString(n.text ?? n.note ?? n.content ?? n),
-        author: toDisplayString(n.author ?? n.createdBy?.name, "Team"),
-        time: toDisplayString(n.time ?? n.createdAt ?? n.timestamp, ""),
-    }));
 
+    const getNormalisedNotes = () => {
+
+        if (typeof existingNotes === 'string' && existingNotes.trim()) {
+
+            return [{
+                text: existingNotes,
+                author: "System",
+                time: ""
+            }];
+        }
+
+
+        if (Array.isArray(existingNotes) && existingNotes.length > 0) {
+            return existingNotes.map((n) => {
+                if (typeof n === 'string') {
+                    return { text: n, author: "System", time: "" };
+                }
+                return {
+                    text: n.text || n.note || n.content || JSON.stringify(n),
+                    author: n.author || n.createdBy?.name || "Team",
+                    time: n.time || n.createdAt || n.timestamp || ""
+                };
+            });
+        }
+
+        return [];
+    };
+
+    const normalisedExisting = getNormalisedNotes();
     const allNotes = [...savedNotes, ...normalisedExisting];
+
+
 
     return (
         <div className="px-6 py-4 w-full">
@@ -775,8 +800,10 @@ const NotesTab = ({ leadId, existingNotes = [] }) => {
             </button>
 
             <div className="mt-6">
+
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                    Notes ({allNotes.length})
+                    {/* Notes ({allNotes.length}) */}
+                    Previous Notes
                 </h3>
                 {allNotes.length === 0 ? (
                     <EmptyState icon="📝" title="No notes yet" subtitle="Add the first note for this lead above." />
@@ -847,21 +874,16 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
                             <h1 className="text-xl font-bold text-gray-900 pr-8">
                                 {toDisplayString(details.name, "Unknown Lead")}
                             </h1>
-                            {/* <p className="text-gray-500 text-xs mt-1">
-                                {[details.industry, details.branch, details.createdBy?.name]
-                                    .filter(Boolean)
-                                    .map((v) => toDisplayString(v))
-                                    .join(" · ") || "No additional info"}
-                            </p> */}
+
                             <p className="text-gray-500 text-xs mt-1">
-  {[details.businessName, details.industry, details.branch, details.createdBy?.name]
-    .filter(Boolean)
-    .map((v) => {
-      const str = toDisplayString(v);
-      return str.split(" ").pop(); 
-    })
-    .join(" · ") || "No additional info"}
-</p>
+                                {[details.businessName, details.industry, details.branch, details.createdBy?.name]
+                                    .filter(Boolean)
+                                    .map((v) => {
+                                        const str = toDisplayString(v);
+                                        return str.split(" ").pop();
+                                    })
+                                    .join(" · ") || "No additional info"}
+                            </p>
                             <div className="flex gap-2 mt-2 flex-wrap">
                                 <Badge
                                     label={details.stage}
@@ -904,7 +926,7 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
                             {activeTab === "Notes" && (
                                 <NotesTab
                                     leadId={details._id}
-                                    existingNotes={Array.isArray(details.notes) ? details.notes : []}
+                                    existingNotes={details.notes}
                                 />
                             )}
                         </div>
@@ -993,8 +1015,10 @@ const Page = () => {
             const token = localStorage.getItem("token");
             const qs = buildQueryString();
             const url = qs
-                ? `https://backendcrm-vm8o.onrender.com/leads/search?${qs}`
-                : "https://backendcrm-vm8o.onrender.com/allleads";
+                // ? `http://localhost:8080/leads/search?${qs}`
+                // : "http://localhost:8080/allleads";
+                ? `${BASE_URL}/leads/search?${qs}`
+                : `${BASE_URL}/allleads`;
 
             const response = await axios.get(url, { headers: { "auth-token": token } });
             const data = response.data?.leads ?? response.data?.Allleads ?? response.data;
@@ -1015,10 +1039,12 @@ const Page = () => {
         setSelectedLeadDetails(null);
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(`https://backendcrm-vm8o.onrender.com/leads/${leadId}`, {
+            // const response = await axios.get(`http://localhost:8080/leads/${leadId}`, {
+            const response = await axios.get(`${BASE_URL}/leads/${leadId}`, {
                 headers: { "auth-token": token },
             });
             const detail = response.data?.lead ?? response.data?.data ?? response.data;
+
             setSelectedLeadDetails(detail || null);
         } catch (err) {
             console.error("Error fetching lead details:", err);
