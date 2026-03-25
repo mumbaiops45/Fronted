@@ -19,7 +19,6 @@ const Page = () => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       try {
-        // const res = await axios.get("http://localhost:8080/performance", {
         const res = await axios.get(`${BASE_URL}/performance`, {
           headers: {
             "auth-token": token,
@@ -129,7 +128,7 @@ const Page = () => {
   if (!revenuess) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-6">
 
       <div className="max-w-7xl mx-auto">
 
@@ -184,8 +183,7 @@ const Page = () => {
 
       </div>
 
-       <div className="grid grid-cols-2 gap-6 p-6 bg-gray-100 min-h-screen">
-
+       <div className="grid grid-cols-2 gap-6 mt-4 bg-slate-50 min-h-screen">
       {branches.map((branch) => (
         <div
           key={branch.branch}

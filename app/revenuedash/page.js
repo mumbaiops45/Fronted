@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import AddProposal from '../components/AddProposal'
 import { BASE_URL } from '@/utils/axiosInstance'
+import { useProposalList } from '@/hooks/proposal.hook'
+import { useAddProposal , useProposals } from '@/hooks/proposal.hook'
 
 const StatCard = ({ title, value, subtitle, color }) => {
     return (
@@ -31,11 +33,15 @@ const Page = () => {
         avgDealValue: 0
     })
     const [loading, setLoading] = useState(true)
+    const { proposals, error, fetchProposals } = useProposalList();
+
+    useEffect(() => {
+        fetchProposals();
+    }, [fetchProposals]);
 
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                // const response = await fetch('http://localhost:8080/getdashboardss');
                 const response = await fetch(`${BASE_URL}/getdashboardss`);
                 const data = await response.json();
                 setDashboardData(data);
@@ -76,7 +82,7 @@ const Page = () => {
     ]
 
     return (
-        <div className="p-4 space-y-4 text-[12px]">
+        <div className="p-4 bg-slate-50 space-y-4 text-[12px]">
 
             <div className="flex justify-between items-center">
                 <div className="flex gap-2">
@@ -118,7 +124,7 @@ const Page = () => {
                     </div>
                 )}
 
-                      {activeTab === 'pipeline' && (
+                {activeTab === 'pipeline' && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between gap-4">
 
@@ -154,16 +160,77 @@ const Page = () => {
 
                             </div>
                         </div>
-                        <div className="bg-gray-50 border rounded-xl h-[420px] flex flex-col items-center justify-center text-center">
-                            <span className="text-4xl mb-3">🗂</span>
-                            <p className="text-lg font-semibold text-gray-700">
-                                Pipeline is empty
-                            </p>
-                            <p className="text-sm text-gray-500 mt-1 mb-4">
-                                Add your first proposal to start tracking deals
-                            </p>
-                            <AddProposal />
-                        </div>
+                        {proposals.allProposal && proposals.allProposal.length > 0 ? (
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {proposals.allProposal.map((proposal) => (
+                                    <div
+                                        key={proposal._id}
+                                        className="bg-white border border-gray-200 rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between"
+                                    >
+                                        <div>
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h3 className="text-[16px] font-bold text-gray-900">{proposal.clientName}</h3>
+                                                <span
+                                                    className={`text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap ${proposal.Stage === "Lead"
+                                                            ? "bg-blue-100 text-blue-800"
+                                                            : proposal.Stage === "Proposal Sent"
+                                                                ? "bg-yellow-100 text-yellow-800"
+                                                                : proposal.Stage === "Won"
+                                                                    ? "bg-green-100 text-green-800"
+                                                                    : "bg-gray-100 text-gray-800"
+                                                        }`}
+                                                >
+                                                    {proposal.Stage}
+                                                </span>
+                                            </div>
+
+                                            <p className="text-gray-600 text-sm mb-3">{proposal.category}</p>
+
+                                            <div className="space-y-2 text-gray-700 text-sm">
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium text-gray-800">City:</span>
+                                                    <span>{proposal.city}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium text-gray-800">Deal:</span>
+                                                    <span>₹{proposal.dealValue.toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium text-gray-800">Proposal:</span>
+                                                    <span>{new Date(proposal.proposalDate).toLocaleDateString()}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium text-gray-800">Expected Close:</span>
+                                                    <span>{new Date(proposal.expectedClose).toLocaleDateString()}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium text-gray-800">Probability:</span>
+                                                    <span>{proposal.probability}%</span>
+                                                </div>
+                                                {proposal.notes && (
+                                                    <div>
+                                                        <span className="font-medium text-gray-800">Notes:</span>
+                                                        <p className="mt-1 text-gray-700 text-sm">{proposal.notes}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="bg-gray-50 border rounded-xl h-[420px] flex flex-col items-center justify-center text-center">
+                                <span className="text-4xl mb-3">🗂</span>
+                                <p className="text-lg font-semibold text-gray-700">
+                                    Pipeline is empty
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1 mb-4">
+                                    Add your first proposal to start tracking deals
+                                </p>
+                                <AddProposal />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -183,7 +250,7 @@ const Page = () => {
                     </p>
                 </a>
 
-             
+
                 <a
                     href="#"
                     className="bg-white w-full p-6 border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
@@ -216,7 +283,7 @@ const Page = () => {
                     </p>
                 </a>
 
-              
+
                 <a
                     href="#"
                     className="bg-white w-full p-6 border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
@@ -238,3 +305,4 @@ const Page = () => {
 }
 
 export default Page
+

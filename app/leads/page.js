@@ -842,7 +842,7 @@ const LeadPanel = ({ isOpen, onClose, lead, details, loading }) => {
         <>
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+                    className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm"
                     onClick={onClose}
                 />
             )}
@@ -1039,7 +1039,6 @@ const Page = () => {
         setSelectedLeadDetails(null);
         try {
             const token = localStorage.getItem("token");
-            // const response = await axios.get(`http://localhost:8080/leads/${leadId}`, {
             const response = await axios.get(`${BASE_URL}/leads/${leadId}`, {
                 headers: { "auth-token": token },
             });
@@ -1100,7 +1099,6 @@ const Page = () => {
             />
 
             <div className="w-full p-4">
-
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest whitespace-nowrap">
@@ -1124,8 +1122,6 @@ const Page = () => {
                         )}
                     </div>
                 </div>
-
-
                 <div className="mb-3 flex justify-between items-center flex-wrap gap-2">
                     <p className="text-xs text-gray-500">
                         {loading
@@ -1145,8 +1141,6 @@ const Page = () => {
                         </div>
                     )}
                 </div>
-
-
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     {loading ? (
                         <Spinner label="Loading leads…" />
