@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import AddProposal from '../components/AddProposal'
 import { BASE_URL } from '@/utils/axiosInstance'
 import { useProposalList } from '@/hooks/proposal.hook'
-import { useAddProposal , useProposals } from '@/hooks/proposal.hook'
 
 const StatCard = ({ title, value, subtitle, color }) => {
     return (
@@ -17,7 +16,6 @@ const StatCard = ({ title, value, subtitle, color }) => {
         </div>
     )
 }
-
 
 const formatINR = (num) => {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num)
@@ -33,11 +31,16 @@ const Page = () => {
         avgDealValue: 0
     })
     const [loading, setLoading] = useState(true)
+    
+    const [searchText, setSearchText] = useState('')
+    const [selectedCategory, setSelectedCategory] = useState('All Categories')
+
     const { proposals, error, fetchProposals } = useProposalList();
 
+    
     useEffect(() => {
-        fetchProposals();
-    }, [fetchProposals]);
+        fetchProposals(searchText, selectedCategory)
+    }, [searchText, selectedCategory, fetchProposals])
 
     useEffect(() => {
         const fetchDashboard = async () => {
@@ -82,10 +85,11 @@ const Page = () => {
     ]
 
     return (
+
         <div className="p-4 bg-slate-50 space-y-4 text-[12px]">
 
-            <div className="flex justify-between items-center">
-                <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-center gap-4 sm:gap-0">
+                <div className="flex flex-wrap gap-2">
                     <button
                         onClick={() => setActiveTab('revenue')}
                         className={`px-4 py-2 rounded-md ${activeTab === 'revenue' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
@@ -101,7 +105,7 @@ const Page = () => {
                     </button>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
                     <p>Pipeline {loading ? "..." : formatINR(dashboardData.activePipeline.value)}</p>
                     <p>Won: {loading ? "..." : formatINR(dashboardData.wonThisPeriod.value)}</p>
                 </div>
@@ -110,7 +114,7 @@ const Page = () => {
             <div className="mt-4 border p-4 rounded-md bg-gray-50">
                 {activeTab === 'revenue' && (
                     <div className="max-w-7xl mx-auto">
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-col-2 lg:grid-cols-4 gap-6">
                             {stats.map((item, index) => (
                                 <StatCard
                                     key={index}
@@ -126,19 +130,25 @@ const Page = () => {
 
                 {activeTab === 'pipeline' && (
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
 
                             <div className="flex-1">
                                 <input
                                     type="text"
                                     placeholder="Search client, city, category, project..."
-                                    className="w-full border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="w-full  border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
                                 />
                             </div>
-                            <div className="flex items-center gap-3">
 
-                                <select className="border rounded-lg px-3 py-2 text-sm">
-                                    <option>All Cagegories</option>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <select
+                                    className="border rounded-lg px-3 py-2 text-sm"
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                >
+                                    <option>All Categories</option>
                                     <option>Website Development</option>
                                     <option>Mobile App</option>
                                     <option>E-Commerce</option>
@@ -151,35 +161,38 @@ const Page = () => {
                                     <option>Corporate Video</option>
                                     <option>SEO</option>
                                     <option>Other</option>
-
                                 </select>
-                                <p className="text-sm text-gray-500">0 proposals</p>
+                                <p className="text-sm text-gray-500">
+                                    {proposals.allProposal ? proposals.allProposal.length : 0} proposals
+                                </p>
                             </div>
-                            <div className="flex items-center gap-3">
+
+                            {/* <div className="flex items-center gap-3"> */}
                                 <AddProposal />
-
-                            </div>
+                            {/* </div> */}
                         </div>
-                        {proposals.allProposal && proposals.allProposal.length > 0 ? (
 
+                        {proposals.allProposal && proposals.allProposal.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {proposals.allProposal.map((proposal) => (
                                     <div
                                         key={proposal._id}
-                                        className="bg-white border border-gray-200 rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between"
+                                        className="bg-white border border-gray-200 rounded-xl shadow-md  hover:shadow-lg transition-shadow duration-300 flex 
+                                        p-4 sm:p-6
+                                        flex-col justify-between"
                                     >
                                         <div>
-                                            <div className="flex justify-between items-start mb-4">
+                                            <div className="flexjustify-between items-start mb-2 sm:mb-4">
                                                 <h3 className="text-[16px] font-bold text-gray-900">{proposal.clientName}</h3>
                                                 <span
                                                     className={`text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap ${proposal.Stage === "Lead"
-                                                            ? "bg-blue-100 text-blue-800"
-                                                            : proposal.Stage === "Proposal Sent"
-                                                                ? "bg-yellow-100 text-yellow-800"
-                                                                : proposal.Stage === "Won"
-                                                                    ? "bg-green-100 text-green-800"
-                                                                    : "bg-gray-100 text-gray-800"
-                                                        }`}
+                                                        ? "bg-blue-100 text-blue-800"
+                                                        : proposal.Stage === "Proposal Sent"
+                                                            ? "bg-yellow-100 text-yellow-800"
+                                                            : proposal.Stage === "Won"
+                                                                ? "bg-green-100 text-green-800"
+                                                                : "bg-gray-100 text-gray-800"
+                                                    }`}
                                                 >
                                                     {proposal.Stage}
                                                 </span>
@@ -235,7 +248,6 @@ const Page = () => {
                 )}
             </div>
 
-
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <a
                     href="#"
@@ -245,11 +257,10 @@ const Page = () => {
                         REVENUE BY CATEGORY
                     </h5>
                     <p className="text-gray-500 flex justify-between">
-                        No, data yet
+                        No data yet
                         <span className="text-red-500 font-bold ml-2">0</span>
                     </p>
                 </a>
-
 
                 <a
                     href="#"
@@ -283,7 +294,6 @@ const Page = () => {
                     </p>
                 </a>
 
-
                 <a
                     href="#"
                     className="bg-white w-full p-6 border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
@@ -296,13 +306,9 @@ const Page = () => {
                         <span className="text-red-500 font-bold ml-2">0</span>
                     </p>
                 </a>
-
             </div>
-
-
         </div>
     )
 }
 
 export default Page
-

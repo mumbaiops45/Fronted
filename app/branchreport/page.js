@@ -43,7 +43,7 @@ const Page = () => {
     return `${value}${unit}`;
   };
 
-  
+
 
   const getProgressColor = (percent) => {
     if (percent < 40) return "bg-red-500";
@@ -52,9 +52,7 @@ const Page = () => {
     return "bg-blue-500";
   };
 
-  
-  
- 
+
 
   const [revenuess, setrevenuess] = useState([]);
 
@@ -62,7 +60,6 @@ const Page = () => {
     const Revenuess = async () => {
       const token = localStorage.getItem("token");
       try {
-        // const res = await axios.get("http://localhost:8080/projection", {
         const res = await axios.get(`${BASE_URL}/projection`, {
           headers: {
             "auth-token": token
@@ -80,7 +77,6 @@ const Page = () => {
   }, []);
 
 
-
   const [branches, setBranches] = useState([]);
 
   useEffect(() => {
@@ -88,7 +84,6 @@ const Page = () => {
       const token = localStorage.getItem("token");
 
       try {
-        // const res = await axios.get("http://localhost:8080/branch", {
         const res = await axios.get(`${BASE_URL}/branch`, {
           headers: {
             "auth-token": token
@@ -142,38 +137,32 @@ const Page = () => {
             );
 
             return (
+
               <div
                 key={index}
                 className="bg-white rounded-xl  shadow-md hover:shadow-xl transition-all duration-300 p-1 border border-gray-100"
               >
-
                 <h3 className="text-gray-600 mx-2 mt-2 text-[12px] font-bold tracking-wide mb-1">
                   {item.name}
                 </h3>
-
                 <p className="text-xl  mx-2 font-bold text-gray-900 ">
                   {formatValue(item.value, item.unit)}
                 </p>
-
                 <p className="text-sm mx-2 text-gray-500 ">
                   Target{" "}
                   <span className="font-semibold mx-2 text-gray-700">
                     {formatValue(item.target, item.unit)}
                   </span>
                 </p>
-
-
                 <div className="w-full  bg-gray-200 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${getProgressColor(percent)}`}
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
-
                 <p className="text-xs mx-2 text-gray-500 mt-2 font-medium">
                   {percent}% Completed
                 </p>
-
               </div>
             );
           })}
@@ -183,136 +172,135 @@ const Page = () => {
 
       </div>
 
-       <div className="grid grid-cols-2 gap-6 mt-4 bg-slate-50 min-h-screen">
-      {branches.map((branch) => (
-        <div
-          key={branch.branch}
-          className="bg-white rounded-xl shadow p-6"
-        >
-          <div className="flex justify-between items-center">
-            <h2 className="text-[13px] font-bold">
-              🏢 {branch.branch}
-            </h2>
-            {branch.tag && (
-              <span
-                className={`px-3 py-1 text-[11px] rounded-full ${
-                  branch.tag === "Best"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-4 bg-slate-50  py-4">
+        {branches.map((branch) => (
+          <div
+            key={branch.branch}
+            className="bg-white rounded-xl shadow p-6 h-[300px] md:h-auto lg:h-[350px]"
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="text-[13px] font-bold">
+                🏢 {branch.branch}
+              </h2>
+              {branch.tag && (
+                <span
+                  className={`px-3 py-1 text-[11px] rounded-full ${branch.tag === "Best"
                     ? "bg-green-100 text-green-700"
                     : "bg-red-100 text-red-600"
-                }`}
-              >
-                {branch.tag}
-              </span>
-            )}
-          </div>
+                    }`}
+                >
+                  {branch.tag}
+                </span>
+              )}
+            </div>
 
-          <p className="text-gray-500 text-[11px] mb-2">
-            {branch.enquiries} enquiries · {formatCurrency(branch.revenue)}
-          </p>
+            <p className="text-gray-500 text-[11px] mb-2">
+              {branch.enquiries} enquiries · {formatCurrency(branch.revenue)}
+            </p>
 
-          <hr/>
+            <hr />
 
-          <div className="space-y-3 my-4">
-            {branch.stages.map((stage) => {
+            <div className="space-y-3 my-4">
+              {branch.stages.map((stage) => {
 
-              const percent = getPercent(branch, stage.count);
-              return (
-                <div key={stage.stage} className="flex items-center gap-3">
+                const percent = getPercent(branch, stage.count);
+                return (
+                  <div key={stage.stage} className="flex items-center gap-3">
 
-                  <span className="w-24 text-[11px] text-gray-600">
-                    {stage.stage}
-                  </span>
+                    <span className="w-24 text-[11px] text-gray-600">
+                      {stage.stage}
+                    </span>
 
-                  <div className="flex-1 bg-gray-200 rounded h-4 relative">
+                    <div className="flex-1 bg-gray-200 rounded h-4 relative">
 
-                    <div
-                      className={`h-4 rounded text-white text-xs flex items-center px-2 ${stageColors[stage.stage]}`}
-                      style={{ width: `${percent}%` }}
-                    >
-                      {stage.count}
+                      <div
+                        className={`h-4 rounded text-white text-xs flex items-center px-2 ${stageColors[stage.stage]}`}
+                        style={{ width: `${percent}%` }}
+                      >
+                        {stage.count}
+                      </div>
+
                     </div>
 
+                    <span className="text-[11px] text-gray-600 w-10">
+                      {percent}%
+                    </span>
+
                   </div>
-
-                  <span className="text-[11px] text-gray-600 w-10">
-                    {percent}%
-                  </span>
-
-                </div>
-              );
-            })}
-          </div>
-
-        
-          {branch.insight && (
-            <div className="mt-2 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[11px] p-3 rounded">
-              {branch.insight}
+                );
+              })}
             </div>
-          )}
 
-        </div>
-      ))}
 
-   
-      <div className="bg-white  rounded-xl shadow p-6">
-        <div className="flex justify-between mb-4">
-          <h2 className="text-[13px] font-bold">💰 Revenue Projection</h2>
-          <span className="text-blue-600 bg-blue-100 text-[11px] px-3 py-1 rounded-full">
-            Optimised
-          </span>
-        </div>
-        <div className="space-y-4">
-          <div className="flex text-[11px] justify-between">
-            <span className="text-gray-600">Current Revenue</span>
-            <span className="font-bold">
-              {formatCurrency(currentRevenue)}
+            {branch.insight && (
+              <div className="mt-2 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[11px] p-3 rounded">
+                {branch.insight}
+              </div>
+            )}
+
+          </div>
+        ))}
+
+
+        <div className="bg-white  rounded-xl shadow p-6 h-[350px] md:h-auto lg:h-[350px]">
+          <div className="flex justify-between mb-4">
+            <h2 className="text-[13px] font-bold">💰 Revenue Projection</h2>
+            <span className="text-blue-600 bg-blue-100 text-[11px] px-3 py-1 rounded-full">
+              Optimised
             </span>
           </div>
-
-          <div className="flex text-[11px] justify-between bg-green-50 p-2 rounded">
-            <span className="text-green-700">
-              Optimised Target
-            </span>
-            <span className="text-green-700 font-[800] text-[14px]">
-              {formatCurrency(Math.round(optimizedTarget))}
-            </span>
-          </div>
-
-          <div className="flex text-[11px] justify-between bg-blue-50 p-2 rounded">
-            <span className="text-blue-700">
-              Potential Uplift
-            </span>
-            <span className="text-blue-700 font-[800] text-[14px]">
-              +{formatCurrency(Math.round(uplift))}
-            </span>
-          </div>
-
-          <div className="flex text-[11px] justify-between">
-            <span className="text-gray-600">Current Deals</span>
-            <span className="font-[800] text-[14px]">
-              {currentDeals} deals
-            </span>
-          </div>
-          <div className="flex text-[11px] justify-between">
-            <span className="text-gray-600">Target Deals</span>
-            <span className="font-extrabold text-[14px]">
-             {revenuess.map((st, index) =>(
-            <div key={index} className="revenue-card">
-               <p>{st.targetDeals} deals</p>
+          <div className="space-y-4">
+            <div className="flex text-[11px] justify-between">
+              <span className="text-gray-600">Current Revenue</span>
+              <span className="font-bold">
+                {formatCurrency(currentRevenue)}
+              </span>
             </div>
-          ))} 
-            </span>
 
+            <div className="flex text-[11px] justify-between bg-green-50 p-2 rounded">
+              <span className="text-green-700">
+                Optimised Target
+              </span>
+              <span className="text-green-700 font-[800] text-[14px]">
+                {formatCurrency(Math.round(optimizedTarget))}
+              </span>
+            </div>
+
+            <div className="flex text-[11px] justify-between bg-blue-50 p-2 rounded">
+              <span className="text-blue-700">
+                Potential Uplift
+              </span>
+              <span className="text-blue-700 font-[800] text-[14px]">
+                +{formatCurrency(Math.round(uplift))}
+              </span>
+            </div>
+
+            <div className="flex text-[11px] justify-between">
+              <span className="text-gray-600">Current Deals</span>
+              <span className="font-[800] text-[14px]">
+                {currentDeals} deals
+              </span>
+            </div>
+            <div className="flex text-[11px] justify-between">
+              <span className="text-gray-600">Target Deals</span>
+              <span className="font-extrabold text-[14px]">
+                {revenuess.map((st, index) => (
+                  <div key={index} className="revenue-card">
+                    <p>{st.targetDeals} deals</p>
+                  </div>
+                ))}
+              </span>
+
+            </div>
           </div>
+          <p className="text-[12px]">Same lead volume. Lift reachability→85%, qualification→71%, close rate→37%.</p>
         </div>
-        <p className="text-[12px]">Same lead volume. Lift reachability→85%, qualification→71%, close rate→37%.</p>
+
       </div>
 
+
     </div>
-    
-    
-    </div>
-   
+
 
 
   );

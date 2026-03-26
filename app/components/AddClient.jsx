@@ -124,7 +124,7 @@ const AddClient = () => {
       : 'border-gray-300 focus:ring-blue-300'
 
   return (
-    <div className="flex justify-center items-center p-4">
+    <div className="flex justify-center items-center py-0 lg:py-4 lg:px-4">
       <button
         onClick={() => setOpen(true)}
         className="rounded-md bg-blue-600 px-4 py-2 text-[11px] font-semibold text-white hover:bg-blue-700 transition"

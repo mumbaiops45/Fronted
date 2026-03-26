@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
@@ -44,9 +42,6 @@ function getMonthLabel(dateStr) {
     return new Date(dateStr).toLocaleString("en-US", { month: "short" });
 }
 
-/* ----------------------------------------
-CUSTOM TOOLTIP
------------------------------------------*/
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
@@ -68,10 +63,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Page() {
 
-    /* ----------------------------------------
-    STATE
-    -----------------------------------------*/
-
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -81,8 +72,6 @@ export default function Page() {
         (async () => {
             try {
                 const token = localStorage.getItem("token");
-
-                // const res = await fetch("http://localhost:8080/allleads", {
                 const res = await fetch(`${BASE_URL}/allleads`,{
                     headers: { "auth-token": token || "" },
                 });
@@ -106,9 +95,6 @@ export default function Page() {
         })();
     }, []);
 
-    /* ----------------------------------------
-    1. MONTHLY ENQUIRIES VS CLOSED
-    -----------------------------------------*/
 
     const monthlyData = useMemo(() => {
 
@@ -139,9 +125,7 @@ export default function Page() {
 
     }, [leads]);
 
-    /* ----------------------------------------
-    2. REVENUE BY BRANCH
-    -----------------------------------------*/
+    
 
     const branchRevenue = useMemo(() => {
 
@@ -194,9 +178,6 @@ export default function Page() {
 
     }, [leads]);
 
-    /* ----------------------------------------
-    4. LEAD SOURCE CONVERSION
-    -----------------------------------------*/
 
     const sourceData = useMemo(() => {
 
@@ -226,9 +207,7 @@ export default function Page() {
 
     }, [leads]);
 
-    /* ----------------------------------------
-    5. AVG DAYS PER STAGE
-    -----------------------------------------*/
+    
 
     const avgDaysData = useMemo(() => {
 
@@ -249,9 +228,7 @@ export default function Page() {
 
     }, [leads]);
 
-    /* ----------------------------------------
-    LOADING SCREEN
-    -----------------------------------------*/
+   
 
     if (loading) {
         return (
@@ -266,18 +243,13 @@ export default function Page() {
         );
     }
 
-    /* ----------------------------------------
-    DASHBOARD UI
-    -----------------------------------------*/
+    
 
     return (
-        <div className="bg-slate-50 min-h-screen p-5 font-sans text-xs text-slate-800">
 
-            {/* ROW 1 */}
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
-
-                {/* MONTHLY ENQUIRIES VS CLOSED */}
+        <div className="bg-slate-50 min-h-screen p-5 sm:p-5 font-sans text-xs sm:text-sm  text-slate-800">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
                 <div className="bg-white rounded-xl p-5 shadow-sm border">
                     <p className="font-bold text-sm mb-2">
@@ -298,17 +270,12 @@ export default function Page() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-
-                {/* REVENUE BY BRANCH */}
-
                 <div className="bg-white rounded-xl p-5 shadow-sm border flex flex-col">
 
                     <p className="font-bold text-sm mb-3">
                         Revenue by Branch
                     </p>
-
                     <div className="flex items-center justify-center gap-8 flex-1">
-
                         <PieChart width={200} height={200}>
                             <Pie
                                 data={branchRevenue}
@@ -364,7 +331,6 @@ export default function Page() {
 
             </div>
 
-            {/* ROW 2 : CONVERSION TREND */}
 
             <div className="bg-white rounded-xl p-5 shadow-sm border mb-4">
 
@@ -401,15 +367,11 @@ export default function Page() {
 
                 <ResponsiveContainer width="100%" height={180}>
                     <AreaChart data={conversionTrend}>
-
                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
                         <XAxis dataKey="month" />
                         <YAxis />
-
                         <Tooltip content={<CustomTooltip />} />
-
                         {allBranches.map((b) => (
-
                             <Area
                                 key={b}
                                 type="monotone"
@@ -419,20 +381,11 @@ export default function Page() {
                                 fill={BRANCH_COLORS[b]}
                                 strokeWidth={2}
                             />
-
                         ))}
-
                     </AreaChart>
                 </ResponsiveContainer>
-
             </div>
-
-            {/* ROW 3 */}
-
-            <div className="grid grid-cols-2 gap-4">
-
-                {/* LEAD SOURCE CONVERSION */}
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl p-5 shadow-sm border">
 
                     <p className="font-bold text-sm mb-3">
@@ -479,7 +432,7 @@ export default function Page() {
 
                 </div>
 
-                {/* AVG DAYS PER STAGE */}
+                
 
                 <div className="bg-white rounded-xl p-5 shadow-sm border">
 
@@ -513,11 +466,10 @@ export default function Page() {
 
                         </BarChart>
                     </ResponsiveContainer>
-
                 </div>
-
             </div>
-
         </div>
+
+
     );
 }

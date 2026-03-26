@@ -46,7 +46,6 @@ const steps = [
     },
 ];
 
-const showOnlyUpload = true;
 
 const toDisplayString = (val, fallback = "Not specified") => {
     if (val === null || val === undefined) return fallback;

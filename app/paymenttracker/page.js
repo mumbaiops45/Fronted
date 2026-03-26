@@ -28,8 +28,8 @@ export default function Page() {
     const [filteredClients, setFilteredClients] = useState([])
     const [loadingClients, setLoadingClients] = useState(true)
     const [errorClients, setErrorClients] = useState("")
-    const [priorityFilter , setPriorityFilter] = useState("")
-    const [paymentFilter , setPaymentFilter] = useState("");
+    const [priorityFilter, setPriorityFilter] = useState("")
+    const [paymentFilter, setPaymentFilter] = useState("");
 
 
     useEffect(() => {
@@ -88,19 +88,19 @@ export default function Page() {
     useEffect(() => {
         let filtered = [...clients]
 
-        if(search) {
+        if (search) {
             const lowerSearch = search.toLowerCase()
-            filtered = filtered.filter(client => 
-                client.clientName?.toLowerCase().includes(lowerSearch) || 
-                client.location?.toLowerCase().includes(lowerSearch) || 
-                client.service?.toLowerCase().includes(lowerSearch) || 
+            filtered = filtered.filter(client =>
+                client.clientName?.toLowerCase().includes(lowerSearch) ||
+                client.location?.toLowerCase().includes(lowerSearch) ||
+                client.service?.toLowerCase().includes(lowerSearch) ||
                 client.project?.toLowerCase().includes(lowerSearch)
             )
         }
-        if(priorityFilter){
+        if (priorityFilter) {
             filtered = filtered.filter(client => client.priority === priorityFilter)
         }
-        if(paymentFilter) {
+        if (paymentFilter) {
             filtered = filtered.filter(clients => clients.paymentStatus === paymentFilter)
         }
 
@@ -110,89 +110,87 @@ export default function Page() {
     if (loadingStats) {
         return <div className="min-h-screen flex items-center justify-center"><p>Loading dashboard...</p></div>
     }
-
     if (errorStats) {
         return <div className="min-h-screen flex items-center justify-center text-red-500"><p>Error: {errorStats}</p></div>
     }
-
     return (
-        <div className="min-h-screen bg-slate-50 p-6">
+
+
+        <div className="min-h-screen bg-slate-50 p-4 sm:p-6">
             <div className="max-w-7xl mx-auto">
-                
-                <div className="grid grid-cols-4 gap-6 mb-6">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     {stats.map((item, index) => (
                         <StatCard key={index} title={item.title} value={item.value} subtitle={item.subtitle} color={item.color} />
                     ))}
                 </div>
-
-              
-                <div className="flex gap-4 bg-gray-100 p-2 rounded-xl w-fit mb-4">
-                    <button onClick={() => setActiveTab("tracker")} className={`px-5 rounded-lg text-[12px] font-medium transition ${activeTab === "tracker" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>📋 Tracker</button>
-                    <button onClick={() => setActiveTab("payment")} className={`px-5 py-2 rounded-lg text-[12px] font-medium transition ${activeTab === "payment" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>💰 Payment Log</button>
-                    <button onClick={() => setActiveTab("calendar")} className={`px-5 py-2 rounded-lg text-[12px] font-medium transition ${activeTab === "calendar" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>📅 Follow-up Calendar</button>
+                <div className="flex flex-wrap gap-2 sm:gap-4 bg-gray-100 p-2 rounded-xl mb-4">
+                    <button onClick={() => setActiveTab("tracker")} className={`px-4 sm:px-5 rounded-lg text-[12px] sm:text-sm font-medium transition ${activeTab === "tracker" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>📋 Tracker</button>
+                    <button onClick={() => setActiveTab("payment")} className={`px-4 sm:px-5 py-2 rounded-lg text-[12px] sm:text-sm font-medium transition ${activeTab === "payment" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>💰 Payment Log</button>
+                    <button onClick={() => setActiveTab("calendar")} className={`px-4 sm:px-5 py-2 rounded-lg text-[12px] sm:text-sm font-medium transition ${activeTab === "calendar" ? "bg-blue-500 text-white shadow" : "text-gray-600 hover:bg-gray-200"}`}>📅 Follow-up Calendar</button>
                 </div>
-
-              
                 <div>
                     {activeTab === "tracker" && (
                         <div className="space-y-4">
-                           
-                            <div className="flex items-center justify-between gap-4 mb-4">
+                            <div className="flex flex-col
+                            lg:flex-row lg:items-center lg:justify-between  gap-4 mb-4 mx-2 sm:px-4">
                                 <div className="flex-1">
                                     <input
                                         type="text"
                                         placeholder="Search client, city, category, project..."
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        className="w-full text-[12px] border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        className="w-full text-[12px] sm:text-sm border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     />
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex flex-wrap items-center gap-3">
                                     <select
-                                    value={priorityFilter}
-                                    onChange={(e) => setPriorityFilter(e.target.value)}
-                                     className="border rounded-lg px-3 py-2 text-[12px]">
-                                         <option value="">All Priorities</option>
+                                        value={priorityFilter}
+                                        onChange={(e) => setPriorityFilter(e.target.value)}
+                                        className="border rounded-lg px-3 py-2 text-[12px] sm:text-sm">
+                                        <option value="">All Priorities</option>
                                         <option value="Hot">HOT</option>
                                         <option value="Warm">Warm</option>
                                         <option value="Cold">Cold</option>
                                     </select>
-                                    <select 
-                                    value={paymentFilter}
-                                    onChange={(e) => setPaymentFilter(e.target.value)}
-                                    className="border rounded-lg px-3 py-2 text-[12px]"
+                                    <select
+                                        value={paymentFilter}
+                                        onChange={(e) => setPaymentFilter(e.target.value)}
+                                        className="border rounded-lg px-3 py-2 text-[12px] sm:text-sm"
                                     >
-                                         <option value="">All Payments</option>
+                                        <option value="">All Payments</option>
                                         <option value="Partial">Partial</option>
                                         <option value="Paid">Paid</option>
                                         <option value="Unpaid">Unpaid</option>
                                     </select>
                                     <p className="text-sm text-gray-500">{filteredClients.length} of {clients.length} clients</p>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center">
                                     <AddClient />
                                     <Newpayment />
                                 </div>
                             </div>
 
-                            
+
                             {loadingClients && <p>Loading clients...</p>}
                             {errorClients && <p className="text-red-500">{errorClients}</p>}
                             {!loadingClients && filteredClients.length === 0 && !errorClients && (
                                 <p className="text-gray-500">No clients found.</p>
                             )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2     
+                            lg:grid-cols-3            
+                              gap-6">
                                 {filteredClients.map((client) => (
                                     <div key={client._id} className="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
-                                        <h2 className="text-lg font-semibold">{client.clientName}</h2>
-                                        <p className="text-gray-600">{client.contactPerson}</p>
-                                        <p className="text-gray-500">{client.location}</p>
-                                        <p className="text-blue-500 font-medium">{client.service}</p>
-                                        <div className="flex justify-between mt-3">
+                                        <h2 className="text-[14px] font-bold">{client.clientName}</h2>
+                                        <p className="text-[14px] text-gray-600">{client.contactPerson}</p>
+                                        <p className="text-[14px] text-gray-500">{client.location}</p>
+                                        <p className="text-[14px] text-blue-500 ">{client.service}</p>
+                                        <div className="text-[14px] flex justify-between mt-3">
                                             <p>Total: ₹{client.totalValue}</p>
                                             <p>Received: ₹{client.amountReceived}</p>
                                         </div>
-                                        <div className="flex justify-between mt-2">
+                                        <div className="flex text-[14px] justify-between mt-2">
                                             <p>Status: {client.paymentStatus}</p>
                                             <p className={`font-semibold ${client.priority === "Hot" ? "text-red-500" : "text-gray-500"}`}>{client.priority}</p>
                                         </div>
@@ -204,7 +202,7 @@ export default function Page() {
 
                     {activeTab === "payment" && (
                         <div className="w-full">
-                            <div className="flex justify-between items-center mb-4">
+                            <div className="flex  flex-col sm:flex-row justify-between items-start sm:items-center  mb-4 gap-2 sm:gap-0">
                                 <p className="text-[12px] text-gray-500">0 payment records</p>
                                 <Newpayment />
                             </div>
@@ -222,6 +220,8 @@ export default function Page() {
                 </div>
             </div>
         </div>
+
+
     )
 }
 

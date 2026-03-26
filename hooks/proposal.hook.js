@@ -16,6 +16,7 @@ export const useProposalList = () => {
     }
 };
 
+
 export const useProposals = (query) => {
     const {proposals, loading, error, fetchProposals} = useProposalStore();
 
@@ -27,6 +28,8 @@ export const useProposals = (query) => {
         proposals, loading, error
     };
 }
+
+
 
 export const useAddProposal  = () => {
     const {createProposal,  proposal, loading, error} = addproposalStore();

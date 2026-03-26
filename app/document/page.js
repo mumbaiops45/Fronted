@@ -44,8 +44,6 @@ const Page = () => {
   });
 
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [previewType, setPreviewType] = useState(null);
-  const [previewData, setPreviewData] = useState(null);
 
 
   const fetchDocuments = async () => {
@@ -57,9 +55,7 @@ const Page = () => {
         alert("Please login first");
         return;
       }
-
-      // const response = await axios.get("http://localhost:8080/viewdocument", {
-       const response = await axios.get(`${BASE_URL}/viewdocument`, {
+      const response = await axios.get(`${BASE_URL}/viewdocument`, {
         headers: {
           "auth-token": token
         }
@@ -84,28 +80,19 @@ const Page = () => {
 
         setStats(newStats);
 
-
-        // const uniqueClients = Array.from(
-        //   new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
-        // ).map((businessName) => ({
-        //   value: businessName,
-        //   label: businessName,
-        // }));
-
-        // setClientsList([{ value: "", label: "All 123 Clients" }, ...uniqueClients]);
         const uniqueClientsFromApi = Array.from(
-  new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
-);
+          new Set(response.data.data.map((doc) => doc.lead?.businessName).filter(Boolean))
+        );
 
-const combinedClients = Array.from(new Set([...predefinedClients, ...uniqueClientsFromApi]));
+        const combinedClients = Array.from(new Set([...predefinedClients, ...uniqueClientsFromApi]));
 
-const clientsDropdown = combinedClients.map((businessName) => ({
-  value: businessName,
-  label: businessName,
-}));
+        const clientsDropdown = combinedClients.map((businessName) => ({
+          value: businessName,
+          label: businessName,
+        }));
 
 
-setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
+        setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
       }
     } catch (err) {
       console.error("Error fetching documents:", err);
@@ -129,8 +116,7 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
 
       if (!token) return;
 
-      // const response = await axios.get("http://localhost:8080/countdocument", {
-       const response = await axios.get(`${BASE_URL}/countdocument`, {
+      const response = await axios.get(`${BASE_URL}/countdocument`, {
         headers: {
           "auth-token": token
         }
@@ -147,58 +133,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
     fetchDocumentCount();
   }, []);
 
-
-  // const handleViewDocument = async (docId) => {
-  //   const doc = documents.find(d => d._id === docId);
-  //   if (!doc) {
-  //     alert("Document not found");
-  //     return;
-  //   }
-
-  //   try {
-  //     const token = localStorage.getItem("token");
-      
-
-  //     const fileExtension = doc.originalName?.split('.').pop()?.toLowerCase();
-  //     const viewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'pdf'];
-
-  //     if (!viewableTypes.includes(fileExtension)) {
-  //       handleDownloadDocument(doc._id, doc.originalName);
-  //       return;
-  //     }
-
-  //     const fileUrl = `http://localhost:8080/viewdocument/${docId}`;
-
-  //     const response = await axios.get(fileUrl, {
-  //       headers: { "auth-token": token },
-  //       responseType: 'blob'
-  //     });
-
-  //     if (response.status === 200) {
-  //       const blob = response.data;
-  //       const objectUrl = URL.createObjectURL(blob);
-  //       const newTab = window.open(objectUrl, '_blank');
-
-  //       if (newTab) {
-  //         newTab.onload = () => URL.revokeObjectURL(objectUrl);
-  //       } else {
-  //         setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
-  //         alert("Popup blocked! Please allow popups for this site.");
-  //       }
-  //     }
-
-  //   } catch (error) {
-  //     console.error("View error:", error);
-
-  //     if (error.response?.status === 401) {
-  //       alert("Unauthorized - Please login again");
-  //     } else if (error.response?.status === 404) {
-  //       alert("File not found on server");
-  //     } else {
-  //       alert(`Failed to load preview\nStatus: ${error.response?.status}\nMessage: ${error.message}`);
-  //     }
-  //   }
-  // };
 
   const handleDownloadDocument = async (docId, fileName) => {
     try {
@@ -219,10 +153,9 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
       let endpointUsed = "";
 
       try {
-        console.log("Attempt 1: Trying query parameter endpoint...");
-        // endpointUsed = `http://localhost:8080/download?id=${docId}`;
-         endpointUsed = `${BASE_URL}/download?id=${docId}`;
-        console.log("Endpoint:", endpointUsed);
+
+        endpointUsed = `${BASE_URL}/download?docId=${docId}`;
+
 
         response = await axios.get(endpointUsed, {
           headers: {
@@ -232,76 +165,15 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
           timeout: 10000
         });
 
-        console.log("Attempt 1 successful!");
-      } catch (error1) {
-        console.log("Attempt 1 failed:", error1.message);
+      } catch (error3) {
         console.log("Error details:", {
-          status: error1.response?.status,
-          statusText: error1.response?.statusText,
-          data: error1.response?.data
+          status: error3.response?.status,
+          statusText: error3.response?.statusText,
+          data: error3.response?.data
         });
 
-
-        try {
-          console.log("Attempt 2: Trying path parameter endpoint...");
-          // endpointUsed = `http://localhost:8080/download/${docId}`;
-          endpointUsed = `${BASE_URL}/download/${docId}`;
-          console.log("Endpoint:", endpointUsed);
-
-          response = await axios.get(endpointUsed, {
-            headers: {
-              "auth-token": token
-            },
-            responseType: 'blob',
-            timeout: 10000
-          });
-
-          console.log("Attempt 2 successful!");
-        } catch (error2) {
-          console.log("Attempt 2 failed:", error2.message);
-          console.log("Error details:", {
-            status: error2.response?.status,
-            statusText: error2.response?.statusText,
-            data: error2.response?.data
-          });
-
-
-          try {
-            console.log("Attempt 3: Trying download with document parameter...");
-            // endpointUsed = `http://localhost:8080/download?docId=${docId}`;
-            endpointUsed = `${BASE_URL}/download?docId=${docId}`;
-            console.log("Endpoint:", endpointUsed);
-
-            response = await axios.get(endpointUsed, {
-              headers: {
-                "auth-token": token
-              },
-              responseType: 'blob',
-              timeout: 10000
-            });
-
-            console.log("Attempt 3 successful!");
-          } catch (error3) {
-            console.log("Attempt 3 failed:", error3.message);
-            console.log("Error details:", {
-              status: error3.response?.status,
-              statusText: error3.response?.statusText,
-              data: error3.response?.data
-            });
-
-            throw new Error("All download attempts failed");
-          }
-        }
+        throw new Error("All download attempts failed");
       }
-
-      console.log("Download response received:", {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-        dataSize: response.data?.size
-      });
-
-
       if (response.status !== 200) {
         throw new Error(`Download failed with status: ${response.status}`);
       }
@@ -309,8 +181,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
       if (!response.data || response.data.size === 0) {
         throw new Error("Downloaded file is empty");
       }
-
-
       const contentDisposition = response.headers['content-disposition'];
       let downloadFileName = fileName || 'document';
 
@@ -323,10 +193,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
 
 
       const contentType = response.headers['content-type'];
-      console.log("Content-Type:", contentType);
-      console.log("Download filename:", downloadFileName);
-
-
       const blob = new Blob([response.data], { type: contentType });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -336,14 +202,11 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-
-      console.log("Download completed successfully!");
       alert("Document downloaded successfully!");
 
     } catch (err) {
       console.error("=== Download Failed ===");
       console.error("Error object:", err);
-
 
       if (err.response) {
         console.error("Error response data:", err.response.data);
@@ -409,17 +272,11 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
         alert("Please login first");
         return;
       }
-
-      console.log("Deleting document:", docId);
-
-      // const response = await axios.delete(`http://localhost:8080/${docId}`, {
       const response = await axios.delete(`${BASE_URL}/${docId}`, {
         headers: {
           "auth-token": token
         }
       });
-
-      console.log("Delete response:", response.data);
 
       if (response.data.success) {
         alert("Document deleted successfully!");
@@ -451,7 +308,7 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
   const getDocTypeColor = (docType) => {
     switch (docType) {
       case "Invoice": return "#aee8ca";
-      case "Quotation": return "#4a90e2";  
+      case "Quotation": return "#4a90e2";
       case "MoM": return "#f0ad4e";
       case "Client Input": return "#b584f6";
       default: return "#b584f6";
@@ -479,18 +336,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
   }, [previewUrl]);
 
 
-  function formatBytes(bytes) {
-    if (bytes === 0) {
-      return "0 B"
-    }
-
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  }
-
-
   const handleFileDrop = async (files) => {
     if (!files || files.length === 0) return;
 
@@ -513,8 +358,7 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
     setUploadMessage(`Uploading "${file.name}"...`);
 
     try {
-      // const response = await axios.post("http://localhost:8080/document", formData, {
-       const response = await axios.post(`${BASE_URL}/document`, formData, {
+      const response = await axios.post(`${BASE_URL}/document`, formData, {
         headers: {
           "auth-token": token,
           "Content-Type": "multipart/form-data",
@@ -526,8 +370,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
         setUploadMessage(`✅ "${file.name}" uploaded successfully as ${docType}!`);
         fetchDocuments();
         fetchDocumentCount();
-
-        // 3 second baad message hide karo
         setTimeout(() => {
           setUploadStatus(null);
           setUploadMessage("");
@@ -573,12 +415,9 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
     .slice(0, 3);
 
   return (
-
-    <div className="font-sans flex gap-6 p-2 bg-gray-50 min-h-screen box-border text-xs">
-
-
+    <div className="font-sans flex flex-col lg:flex-row gap-4 p-2 bg-gray-50 min-h-screen box-border text-xs">
       <div className="flex-1 ">
-        <div className="flex gap-1 font-bold text-[8px] ">
+        <div className="flex flex-wrap gap-2 font-bold text-xs">
           {categories.map((cat) => (
             <button
               key={cat.name}
@@ -592,7 +431,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
               }}
             >
               <span className="text-xl"> {getDocTypeIcon(cat.name)}</span>
-
               <span>{cat.name}  </span>
               <span className="ml-1">
                 {cat.name === "All" ? documents.length : stats[cat.name] || 0}
@@ -600,10 +438,7 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
             </button>
           ))}
         </div>
-
-
-
-        <div className="flex gap-1 items-center flex-wrap text-sm justify-end">
+        <div className="flex flex-wrap gap-2 items-center text-sm justify-start lg:justify-end" >
           <select
             id="client-select"
             value={selectedClient}
@@ -637,20 +472,9 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
                 key={doc._id}
                 className="relative group bg-white rounded-xl p-4 shadow-md cursor-pointer flex flex-col gap-2 border border-transparent hover:border-blue-500 transform hover: -translate-y-1 transition-all duration-300"
                 title={doc.description || ""}
-              > 
+              >
 
-                <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"> 
-                 
-                  {/* <button
-                    className="bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded hover:bg-blue-700 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewDocument(doc._id);
-                    }}
-                    title="View Document"
-                  >
-                    <AiFillEye />
-                  </button> */}
+                <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                   <button
                     className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded hover:bg-green-700 transition-colors"
                     onClick={(e) => {
@@ -710,9 +534,7 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
           e.target.value = "";
         }}
       />
-
-      <aside className="w-80 flex flex-col gap-6 bg-white rounded-xl p-5 shadow-md h-fit flex-shrink-0">
-
+      <aside className="w-full lg:w-80 flex flex-col gap-6 bg-white rounded-xl p-4 lg:p-5 shadow-md h-fit">
         {uploadStatus && (
           <div
             className={`rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2 transition-all ${uploadStatus === "loading"
@@ -834,23 +656,18 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
               key={index}
               className="bg-gray-50 rounded-xl p-2.5 mb-2 flex items-center gap-3 shadow-sm border border-gray-100"
             >
-              
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0  "
                 style={{ backgroundColor: `${getDocTypeColor(doc.docType)}20` }}
               >
                 {getDocTypeIcon(doc.docType)}
               </div>
-
-
               <div className="flex flex-col flex-1 min-w-0">
                 <span className="font-semibold text-[12px] truncate">{doc.originalName}</span>
                 <span className="text-gray-400 text-[12px]">
                   {doc.uploadedBy?.name || doc.lead?.businessName || "Unknown"} • {getTimeAgo(doc.createdAt)}
                 </span>
               </div>
-
-             
               <span
                 className="text-green rounded-full px-2 py-0.5 text-[9px] font-semibold flex-shrink-0"
                 style={{ backgroundColor: getDocTypeColor(doc.docType) }}
@@ -862,97 +679,6 @@ setClientsList([{ value: "", label: "All Clients" }, ...clientsDropdown]);
         </div>
 
       </aside>
-
-
-      {previewUrl && previewType && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-          onClick={() => {
-            setPreviewUrl(null);
-            setPreviewType(null);
-            setPreviewData(null);
-          }}
-        >
-          <div
-            className="relative bg-white rounded-lg overflow-hidden shadow-xl"
-            style={{ width: '600px' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center p-3 bg-gray-100 border-b">
-              <h3 className="text-sm font-semibold text-gray-700">Document Preview</h3>
-              <button
-                onClick={() => {
-                  setPreviewUrl(null);
-                  setPreviewType(null);
-                  setPreviewData(null);
-                }}
-                className="text-gray-500 hover:text-gray-700 text-xl font-bold"
-              >
-                ×
-              </button>
-            </div>
-
-
-            <div className="p-4 flex justify-center items-center" style={{ minHeight: '500px' }}>
-              {previewType === 'image' && (
-                <div className="flex justify-center items-center" style={{ width: '500px', height: '500px' }}>
-                  <img
-                    src={previewUrl}
-                    alt="Document Preview"
-                    style={{
-                      maxWidth: '500px',
-                      maxHeight: '500px',
-                      width: 'auto',
-                      height: 'auto',
-                      objectFit: 'contain'
-                    }}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://via.placeholder.com/500x500?text=Image+not+available';
-                    }}
-                  />
-                </div>
-              )}
-
-              {previewType === 'pdf' && (
-                <iframe
-                  src={previewUrl}
-                  className="w-full"
-                  style={{ height: '500px' }}
-                  title="PDF Preview"
-                />
-              )}
-            </div>
-
-
-            <div className="flex justify-end gap-2 p-3 bg-gray-100 border-t">
-              <button
-                onClick={() => {
-                  if (previewData) {
-                    handleDownloadDocument(previewData.docId, previewData.fileName);
-                  }
-                  setPreviewUrl(null);
-                  setPreviewType(null);
-                  setPreviewData(null);
-                }}
-                className="bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-              >
-                Download
-              </button>
-              <button
-                onClick={() => {
-                  setPreviewUrl(null);
-                  setPreviewType(null);
-                  setPreviewData(null);
-                }}
-                className="bg-gray-500 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-gray-600 transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

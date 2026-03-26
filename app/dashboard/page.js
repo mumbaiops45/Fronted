@@ -4,11 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/utils/axiosInstance";
 
-// const API = "http://localhost:8080";  
 
-   
-
-   const API = "https://backendcrm-vm8o.onrender.com"; 
 
 function getToken() {
   if (typeof window === "undefined") return "";
@@ -127,7 +123,6 @@ export default function Page() {
   useEffect(() => {
     const Activity = async () => {
       try {
-        // const res = await axios.get("http://localhost:8080/getrecent");
         const res = await axios.get(`${BASE_URL}/getrecent`);
         setshowactivity(res.data.activities);
       } catch (error) { console.log(error.message); }
@@ -138,13 +133,11 @@ export default function Page() {
   const handleViewAll = async () => {
     try {
       if (!showAll) {
-        // const res = await axios.get("http://localhost:8080/last20day");
         const res = await axios.get(`${BASE_URL}/last20day`);
         setshowactivity(res.data.activities);
         setShowAll(true);
       } else {
-        // const res = await axios.get("http://localhost:8080/getrecent");
-         const res = await axios.get(`${BASE_URL}/getrecent`);
+        const res = await axios.get(`${BASE_URL}/getrecent`);
         setshowactivity(res.data.activities);
         setShowAll(false);
       }
@@ -160,7 +153,7 @@ export default function Page() {
 
       if (!token) return;
 
-      // const response = await axios.get("http://localhost:8080/countdocument", {
+
       const response = await axios.get(`${BASE_URL}/countdocument`, {
         headers: {
           "auth-token": token
@@ -186,9 +179,9 @@ export default function Page() {
 
   useEffect(() => {
     const endpoints = [
-      { key: "branch", url: `${API}/branch123` },
-      { key: "monthly", url: `${API}/monthly` },
-      { key: "source", url: `${API}/source` },
+      { key: "branch", url: `${BASE_URL}/branch123` },
+      { key: "monthly", url: `${BASE_URL}/monthly` },
+      { key: "source", url: `${BASE_URL}/source` },
     ];
     const results = [];
     Promise.all(
@@ -242,60 +235,82 @@ export default function Page() {
   const bestBranch = sortedBranches[0];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {!hasData && <DebugPanel results={debugRes} />}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <KPICard icon="📋" label="Total Enquiries" value={totalLeads.toLocaleString("en-IN")}
-            sub={activeMonth ? `↑ ${activeMonth.enquiries} this month` : "No enquiries yet"} accent="blue" />
-          <KPICard icon="✅" label="Deals Closed" value={totalClosed}
-            sub={activeMonth ? `↑ ${activeMonth.closed} this month` : "—"} accent="green" />
-          <KPICard icon="💰" label="Total Revenue" value={fmtRev(totalRevenue)}
-            sub={activeMonth ? `↑ ${fmtRev(activeMonth.revenue)} this month` : "—"} accent="yellow" />
-          <KPICard icon="🎯" label="Conversion Rate" value={`${overallConv}%`}
-            sub="Target: 10%" subColor="text-gray-400" accent="purple" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <KPICard
+            icon="📋"
+            label="Total Enquiries"
+            value={totalLeads.toLocaleString("en-IN")}
+            sub={activeMonth ? `↑ ${activeMonth.enquiries} this month` : "No enquiries yet"}
+            accent="blue"
+          />
+          <KPICard
+            icon="✅"
+            label="Deals Closed"
+            value={totalClosed}
+            sub={activeMonth ? `↑ ${activeMonth.closed} this month` : "—"}
+            accent="green"
+          />
+          <KPICard
+            icon="💰"
+            label="Total Revenue"
+            value={fmtRev(totalRevenue)}
+            sub={activeMonth ? `↑ ${fmtRev(activeMonth.revenue)} this month` : "—"}
+            accent="yellow"
+          />
+          <KPICard
+            icon="🎯"
+            label="Conversion Rate"
+            value={`${overallConv}%`}
+            sub="Target: 10%"
+            subColor="text-gray-400"
+            accent="purple"
+          />
         </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div className="lg:col-span-2 space-y-8">
+            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+              <header className="flex items-center justify-between mb-4">
+                <h2 className="text-[14px] font-bold text-gray-900">Sales Funnel — All Branches</h2>
+                <span className="text-[12px] font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                  {totalLeads} leads
+                </span>
+              </header>
 
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-
-          <div className="lg:col-span-2 space-y-4">
-
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-gray-900">Sales Funnel — All Branches</h2>
-                <span className="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">{totalLeads} leads</span>
-              </div>
-              {branches.length === 0
-                ? <p className="text-sm text-gray-400 text-center py-6">No branch data loaded</p>
-                : <div className="space-y-1">
+              {branches.length === 0 ? (
+                <p className="text-center text-gray-400 py-10 text-sm">No branch data loaded</p>
+              ) : (
+                <div className="space-y-3 ">
                   <FunnelBar label="Lead Capture" value={funnelMap["Lead Capture"] || 0} max={funnelMax} color="blue" />
                   <FunnelBar label="Reachable" value={funnelMap["Reachable"] || 0} max={funnelMax} color="indigo" />
                   <FunnelBar label="Qualified" value={funnelMap["Qualified"] || 0} max={funnelMax} color="yellow" />
                   <FunnelBar label="Proposal Sent" value={funnelMap["Proposal Sent"] || 0} max={funnelMax} color="purple" />
                   <FunnelBar label="Closed Won" value={funnelMap["Closed Won"] || 0} max={funnelMax} color="green" />
                 </div>
-              }
-            </div>
-            <div className="bg-white shadow-lg rounded-lg p-4">
-              <div className="flex justify-between  items-center ">
-                <p className="font-semibold  text-sm">Recent Activity</p>
-                <p
-                  className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer text-xs font-medium select-none"
+              )}
+            </section>
+            <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-semibold text-gray-900 text-base">Recent Activity</h3>
+                <button
                   onClick={handleViewAll}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleViewAll(); }}
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
+                  aria-label="Toggle view all recent activity"
                 >
                   {showAll ? "Hide" : "View all →"}
-                </p>
+                </button>
               </div>
-              <ul className="grid grid-cols-1 mt-2 gap-2">
+
+              <ul
+                className={`space-y-3 max-h-96 ${showactivity?.length > 5
+                    ? "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                    : "overflow-y-hidden"
+                  }`}
+              >
                 {showactivity
-                  ?.sort(
-                    (a, b) =>
-                      new Date(b.activityTime || 0) - new Date(a.activityTime || 0)
-                  )
+                  ?.sort((a, b) => new Date(b.activityTime || 0) - new Date(a.activityTime || 0))
                   .map((activity, index) => {
                     const diffMs = new Date() - new Date(activity.activityTime || 0);
                     const diffMins = Math.floor(diffMs / (1000 * 60));
@@ -311,26 +326,15 @@ export default function Page() {
                     return (
                       <li
                         key={index}
-                        className=" flex flex-col   rounded transition cursor-default"
+                        className="flex flex-col rounded-md p-3 hover:bg-gray-50 transition cursor-default"
                       >
-                        <div className="flex flex-wrap items-center gap-2 text-gray-700 text-xs font-medium">
-
+                        <div className="flex flex-wrap items-center gap-2 text-gray-700 text-xs font-medium mb-1">
                           <span className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0" aria-hidden="true" />
-
-
-                          {activity.type && (
-                            <span>{activity.type} —</span>
-                          )}
-
-                          {activity.leadName && (
-                            <span className="font-semibold">{activity.leadName}</span>
-                          )}
-
-
+                          {activity.type && <span>{activity.type} —</span>}
+                          {activity.leadName && <span className="font-semibold">{activity.leadName}</span>}
                           {activity.amount !== undefined && (
                             <span>
-                              · ₹
-                              {new Intl.NumberFormat("en-IN").format(activity.amount)}
+                              · ₹{new Intl.NumberFormat("en-IN").format(activity.amount)}
                             </span>
                           )}
                           {activity.user && (
@@ -339,87 +343,112 @@ export default function Page() {
                             </span>
                           )}
                         </div>
-                        <div className="text-gray-400 mx-4 text-xs select-none">
+                        <div className="text-gray-400 ml-4 text-xs select-none">
                           {timeDisplay}
                           {activity.branch ? ` · ${activity.branch}` : ""}
                         </div>
-                        <hr/>
+                        <hr className="mt-2 border-gray-200" />
                       </li>
-
                     );
-
                   })}
               </ul>
-            </div>
+            </section>
+
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <h2 className="text-sm font-bold text-gray-900 mb-3">Branch Performance</h2>
-              {sortedBranches.length === 0
-                ? <p className="text-sm text-gray-400 text-center py-4">No data</p>
-                : sortedBranches.map(([name, d]) => {
+
+
+          <div className="space-y-8">
+            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+              <h3 className="text-[14px] font-bold text-gray-900 mb-4">Branch Performance</h3>
+              {sortedBranches.length === 0 ? (
+                <p className="text-center text-gray-400 py-6 text-sm">No data</p>
+              ) : (
+                sortedBranches.map(([name, d]) => {
                   const c = BRANCH_COLORS[name] || DEFAULT_COLOR;
                   return (
-                    <div key={name} className="py-2 border-b border-gray-50 last:border-0">
+                    <div key={name}
+                    className="py-3 px-4 mb-2 border border-gray-200 rounded-lg ">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-xs font-semibold">
-                          <span>🏢</span><span>{name}</span>
+                        <div className="flex items-center  gap-2 text-[12px] font-bold text-gray-700">
+                          <span>🏢</span>
+                          <span>{name}</span>
                         </div>
-                        <span className="text-xs font-bold text-blue-600">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(d.revenue)}</span>
+                        <span className="text-[12px] font-bold text-blue-600">
+                          {new Intl.NumberFormat("en-IN", {
+                            style: "currency",
+                            currency: "INR",
+                            maximumFractionDigits: 0,
+                          }).format(d.revenue)}
+                        </span>
                       </div>
-                      <div className="flex gap-2 mt-1 text-xs text-gray-400">
-                        <span>Leads <b className="text-gray-600">{d.total}</b></span>
-                        <span>Closed <b className="text-gray-600">{d.closed}</b></span>
-                        <span>Rate <b className="text-gray-600">{d.convRate}%</b></span>
+                      <div className="flex gap-4 mt-2 text-[12px] text-gray-500">
+                        <span>
+                          Leads <b className="text-gray-700">{d.total}</b>
+                        </span>
+                        <span>
+                          Closed <b className="text-gray-700">{d.closed}</b>
+                        </span>
+                        <span>
+                          Rate <b className="text-gray-700">{d.convRate}%</b>
+                        </span>
                       </div>
-                      <div className="mt-1 h-1 bg-gray-100 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${c.dot}`} style={{ width: `${Math.min(d.convRate, 100)}%` }} />
+                      <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${c.dot}`}
+                          style={{ width: `${Math.min(d.convRate, 100)}%` }}
+                        />
                       </div>
                     </div>
                   );
-                })}
+                })
+              )}
+
               {bestBranch && (
-                <div className="mt-2 bg-blue-50 rounded-lg p-2 border border-blue-100 text-xs text-blue-500">
+                <div className="mt-4 bg-blue-50 rounded-lg p-3 border border-blue-100 text-[11px] text-blue-600">
                   💡 {bestBranch[0]}'s {bestBranch[1].convRate}% conv. rate leads. Replicate for +{fmtRev(Math.round(bestBranch[1].revenue * 0.4))}.
                 </div>
               )}
-            </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-2">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <h5>Today's Follow-ups</h5>
-                <p>3 overdue</p>
+            </section>
+            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100 space-y-2">
+              <div className="flex justify-between items-center text-[14px] font-bold">
+                <h3>Today's Follow-ups</h3>
+                <p className="text-[12px] text-red-600">3 overdue</p>
               </div>
               {[
                 { name: "Nisha Jewellers", status: "Urgent", desc: "Day6 - Final follow-up due", color: "red" },
                 { name: "Ravi Kumar Foods", status: "Today", desc: "Day2- Check-in call", color: "orange" },
                 { name: "TechStart Solutions", status: "Due", desc: "Send proposal today", color: "orange" },
               ].map((f, idx) => (
-                <div key={idx} className={`bg-${f.color}-100 rounded-lg p-3 shadow-inner border border-gray-200`}>
-                  <p className="text-xs font-semibold mb-1 text-gray-800">{f.name}</p>
-                  <div className="flex justify-between items-center text-xs">
-                    <p className="text-gray-600">{f.desc}</p>
-                    <span className={`inline-block text-${f.color}-500 text-xs font-semibold px-2 py-0.5 rounded-full`}>{f.status}</span>
+                <div
+                  key={idx}
+                  className={`bg-${f.color}-100 rounded-lg p-2 shadow-inner border border-gray-200`}
+                >
+                  <p className="text-[12px] font-semibold mb-1 text-gray-800">{f.name}</p>
+                  <div className="flex justify-between items-center text-[12px]">
+                    <p className=" text-gray-600">{f.desc}</p>
+                    <span
+                      className={`inline-block text-${f.color}-500 text-[12px] font-bold px-3 py-1 rounded-full`}
+                    >
+                      {f.status}
+                    </span>
                   </div>
                 </div>
               ))}
-            </div>
-
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 text-center text-xs space-y-2 max-w-sm mx-auto">
-              <div className="text-2xl">📁</div>
-              <p className="font-semibold">{totalDocuments} Documents</p>
-              <p>
-                {documentData
-                  .map((doc) => `${doc.count} ${doc._id}`)
-                  .join(" · ")}
+            </section>
+            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-200 text-center text-sm space-y-0 max-w-md mx-auto">
+              <div className="text-4xl">📁</div>
+              <p className="text-[12px] font-bold">{totalDocuments} Documents</p>
+              <p className="text-[11px] text-gray-600">
+                {documentData.map((doc) => `${doc.count} ${doc._id}`).join(" · ")}
               </p>
-
               <button
                 onClick={() => (window.location.href = "/document")}
-                className="w-full bg-blue-600 text-white rounded-lg py-1 mt-2 text-xs cursor-pointer"
+                className="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white rounded-lg py-2 mt-3 text-sm font-semibold"
               >
                 Open Documents →
               </button>
-            </div>
+            </section>
+
           </div>
         </div>
       </div>

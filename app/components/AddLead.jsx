@@ -99,7 +99,6 @@ const AddLead = () => {
         }
 
         try {
-            // const response = await axios.post("http://localhost:8080/create", payload, {
              const response = await axios.post(`${BASE_URL}/create`, payload, {
                 headers: { "auth-token": token }
             })
@@ -197,10 +196,11 @@ const AddLead = () => {
 
     return (
         <div className="relative p-6 bg-white-100">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">All Leads</h1>
-                <div className="flex items-center gap-4">
-                    <div className="relative w-64 h-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-center gap-4 sm:gap-0 mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold">All Leads</h1>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                   
+                        <div className="relative w-full sm:w-64 h-8">
                         <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 text-[12px]">
                             <FaSearch />
                         </span>
@@ -210,18 +210,20 @@ const AddLead = () => {
                             className="pl-8 pr-3 h-full w-full text-[12px] border rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
                         />
                     </div>
+                    <div className='flex gap-2 w-full sm:w-auto'>
                     <button
                         onClick={() => openModal('upload')}
-                        className="h-8 px-4 bg-blue-500 text-white text-[12px] rounded-lg hover:bg-blue-600 transition"
+                        className="h-8 w-full sm:w-auto px-4 bg-blue-500 text-white text-[12px] rounded-lg hover:bg-blue-600 transition"
                     >
                         Upload
                     </button>
                     <button
                         onClick={() => openModal('addLead')}
-                        className="h-8 px-4 bg-green-500 text-white text-[12px] rounded-lg hover:bg-green-600 transition"
+                        className="h-8 w-full sm:w-auto px-4 bg-green-500 text-white text-[12px] rounded-lg hover:bg-green-600 transition"
                     >
                         +Add Lead
                     </button>
+                    </div>
                 </div>
             </div>
 
