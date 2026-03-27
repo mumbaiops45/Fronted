@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import {getPropsalService, addPropsalService , getProposals } from "@/services/proposal.service";
-import { fetchProposals } from "@/api/paymentApi";
+
 
 export const proposalListStore = create((set) => ({
     proposals: [],
@@ -34,12 +34,12 @@ export const useProposalStore = create((set) => ({
 
         try {
             const data = await getProposals(query);
-            set({proposals: data, loading: false});
+            set({proposals: data  || [] , loading: false});
         } catch (error) {
-            set({error: error.message || "Somethings went wrong", loading: false})
+            set({proposals: [], error: error.message || "Somethings went wrong", loading: false})
         }
     }
-}))
+}));
 
 export const addproposalStore = create((set) =>({
     loading: false,

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import AddProposal from '../components/AddProposal'
 import { BASE_URL } from '@/utils/axiosInstance'
-import { useProposalList } from '@/hooks/proposal.hook'
+import {  useProposals } from '@/hooks/proposal.hook'
 
 const StatCard = ({ title, value, subtitle, color }) => {
     return (
@@ -31,16 +31,18 @@ const Page = () => {
         avgDealValue: 0
     })
     const [loading, setLoading] = useState(true)
-    
+
     const [searchText, setSearchText] = useState('')
     const [selectedCategory, setSelectedCategory] = useState('All Categories')
 
-    const { proposals, error, fetchProposals } = useProposalList();
+
+    const combinedQuery = [searchText, selectedCategory !== 'All Categories' ? selectedCategory : '']
+        .filter(Boolean)
+        .join(' ')
+        .trim();
 
     
-    useEffect(() => {
-        fetchProposals(searchText, selectedCategory)
-    }, [searchText, selectedCategory, fetchProposals])
+    const { proposals, loading: proposalsLoading, error } = useProposals(combinedQuery);
 
     useEffect(() => {
         const fetchDashboard = async () => {
@@ -163,18 +165,16 @@ const Page = () => {
                                     <option>Other</option>
                                 </select>
                                 <p className="text-sm text-gray-500">
-                                    {proposals.allProposal ? proposals.allProposal.length : 0} proposals
+                                    {proposals ? proposals.length : 0} proposals
                                 </p>
                             </div>
-
-                            {/* <div className="flex items-center gap-3"> */}
-                                <AddProposal />
-                            {/* </div> */}
+                            <AddProposal />
                         </div>
 
-                        {proposals.allProposal && proposals.allProposal.length > 0 ? (
+
+                        {proposals && proposals.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {proposals.allProposal.map((proposal) => (
+                                {proposals.map((proposal) => (
                                     <div
                                         key={proposal._id}
                                         className="bg-white border border-gray-200 rounded-xl shadow-md  hover:shadow-lg transition-shadow duration-300 flex 
@@ -192,14 +192,12 @@ const Page = () => {
                                                             : proposal.Stage === "Won"
                                                                 ? "bg-green-100 text-green-800"
                                                                 : "bg-gray-100 text-gray-800"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {proposal.Stage}
                                                 </span>
                                             </div>
-
                                             <p className="text-gray-600 text-sm mb-3">{proposal.category}</p>
-
                                             <div className="space-y-2 text-gray-700 text-sm">
                                                 <div className="flex justify-between">
                                                     <span className="font-medium text-gray-800">City:</span>
@@ -261,7 +259,6 @@ const Page = () => {
                         <span className="text-red-500 font-bold ml-2">0</span>
                     </p>
                 </a>
-
                 <a
                     href="#"
                     className="bg-white w-full p-6 border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
@@ -293,7 +290,6 @@ const Page = () => {
                         Avg Deal Size <span className="text-red-500 font-bold">₹0</span>
                     </p>
                 </a>
-
                 <a
                     href="#"
                     className="bg-white w-full p-6 border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"

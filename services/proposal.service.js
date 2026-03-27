@@ -9,7 +9,6 @@ export const getPropsalService = async(payload) =>{
     } catch (error) {
         const message = 
         error.response?.data?.message || error.response?.data || error.message || "Get all Proposal failed";
-
         throw new Error(message);
     }
 }
@@ -23,6 +22,7 @@ export const getProposals = async(query) => {
         throw error;
     }
 }
+
 
 export const addPropsalService = async (payload) =>{
     try {
