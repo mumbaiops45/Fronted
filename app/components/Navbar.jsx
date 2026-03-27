@@ -90,22 +90,22 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             </button>
           </div>
           <div className="flex gap-4 pb-3 w-fit">
-            <div className="w-14 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-[14px] tracking-wider">
+            <div className="w-14 h-10 bg-gradient-to-br from-[#0F2D5C] via-[#1E56A8] to-[#3B82F6] rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-[18px] tracking-wider">
                 NNC
               </span>
             </div>
             <div className="flex flex-col leading-tight">
-              <h1 className="text-[14px] font-extrabold text-gray-900 tracking-wide">
+              <h1 className="text-[18px] font-extrabold text-gray-900 tracking-wide">
                 NNC CRM
               </h1>
-              <p className="text-[12px] text-gray-500">Website Services</p>
+              <p className="text-[10px] text-gray-500">Website Services</p>
             </div>
           </div>
+          <hr className="border-gray-300"/>
           <div className="flex flex-col space-y-3 flex-grow">
-
             <div>
-              <span className="text-[12px] text-gray-500">Overview</span>
+              <span className="text-[12px]  text-gray-500">OVERVIEW</span>
               <Link href="/dashboard" className={linkClass("/dashboard")}>
                 <RxDashboard className="mr-2" />
                 Dashboard
@@ -113,18 +113,17 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             </div>
 
             <div>
-              <span className="text-[12px] text-gray-500">Sales</span>
+              <span className="text-[12px] text-gray-500">SALES</span>
+                
+                <Link href="/pipeline" className={linkClass("/pipeline")}>
+                <GoPersonFill className="mr-2" />
+                Pipeline
+              </Link>
 
               <Link href="/leads" className={linkClass("/leads")}>
                 <MdOutlineSpaceDashboard className="mr-2" />
                 All Lead
               </Link>
-
-              <Link href="/pipeline" className={linkClass("/pipeline")}>
-                <GoPersonFill className="mr-2" />
-                Pipeline
-              </Link>
-
               <Link href="/calender" className={linkClass("/calender")}>
                 <SlCalender className="mr-2" />
                 Calendar
@@ -132,7 +131,7 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             </div>
 
             <div>
-              <span className="text-[12px] text-gray-500">Documents</span>
+              <span className="text-[12px] text-gray-500">DOCUMENTS</span>
               <Link href="/document" className={linkClass("/document")}>
                 <IoIosDocument className="mr-2" />
                 Documents
@@ -140,7 +139,7 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             </div>
 
             <div>
-              <span className="text-[12px] text-gray-500">Analytics</span>
+              <span className="text-[12px] text-gray-500">ANALYTICS</span>
 
               <Link href="/analytics" className={linkClass("/analytics")}>
                 <GoPulse className="mr-2" />

@@ -77,69 +77,84 @@ const Homepage = () => {
 
   return (
 
-    <div className="flex flex-col md:flex-row min-h-screen">
-      <div className="w-full md:w-[65%] bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 text-white p-10 md:p-20 flex flex-col justify-center">
+    <div className="flex flex-col md:flex-row h-screen ">
+      <div className="w-full md:w-[65%] bg-gradient-to-br from-[#0F2D5C] via-[#1E56A8] to-[#3B82F6] text-white p-10 md:p-20 flex flex-col justify-center font-['Plus_Jakarta_Sans']">
         <div className="w-full py-6 md:py-8">
           <div className="flex items-center gap-4 md:gap-6">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-blue-800 flex items-center justify-center">
-              <span className="text-white font-bold text-sm md:text-[15px] tracking-widest">NNC</span>
+            <div className="  md:w-13 md:h-13 rounded-xl bg-white/15 flex items-center justify-center ">
+              <span className="text-white font-extrabold text-[20px] md:text-[20px] tracking-widest font-syne" style={{ fontFamily: "'Syne', sans-serif" }}>NNC</span>
+
             </div>
             <div className="flex flex-col">
-              <h2 className="text-sm md:text-[15px] font-extrabold text-white tracking-wide">NNC CRM</h2>
-              <p className="text-blue-200 text-[10px] md:text-[12px] mt-1">Website Development Services</p>
+              <h2
+                className="text-[20px] md:text-[20px] font-extrabold text-white tracking-wide"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+              >
+                NNC CRM
+              </h2>
+              <p className="text-blue-200 text-[13px] md:text-[13px] mt-1">Website Development Services</p>
             </div>
           </div>
         </div>
 
         <div className="space-y-2 md:space-y-0 leading-tight font-syne">
-          <p className="text-2xl md:text-[34px] font-[800]">Your leads.</p>
-          <p className="text-2xl md:text-[34px] font-[800]">Your pipeline.</p>
-          <p className="text-2xl md:text-[34px] font-[800]">Your growth.</p>
+          <p className="text-[25px] md:text-[34px] font-[800]" style={{ fontFamily: "'Syne', sans-serif" }}>Your leads.</p>
+          <p className="text-[25px] md:text-[34px] font-[800]" style={{ fontFamily: "'Syne', sans-serif" }}>Your pipeline.</p>
+          <p className="text-[25px] md:text-[34px] font-[800]" style={{ fontFamily: "'Syne', sans-serif" }}>Your growth.</p>
         </div>
 
         <p className="mt-4 md:mt-6 max-w-full md:max-w-lg text-[12px] md:text-[14px] opacity-90 leading-relaxed">
           NNC's complete CRM for managing website development enquiries across
           Bangalore, Mumbai & Mysore — from first contact to project delivery.
         </p>
-        <div className="flex overflow-x-auto gap-6 mt-6 md:mt-12">
+        <div className="flex  gap-6 mt-6 md:mt-12">
           <div className="flex-shrink-0">
-            <h2 className="text-2xl md:text-3xl font-bold">1,022</h2>
-            <p className="text-xs md:text-sm opacity-70">Total Leads</p>
+            <h2 className="text-[26px] md:text-[26px] font-extrabold" style={{ fontFamily: "'Syne', sans-serif" }}>1,022</h2>
+            <p className="text-[12px] md:text-[12px] opacity-70">Total Leads</p>
           </div>
           <div className="flex-shrink-0">
-            <h2 className="text-2xl md:text-3xl font-bold">₹6.88L</h2>
-            <p className="text-xs md:text-sm opacity-70">Revenue</p>
+            <h2 className="text-[26px] md:text-[26px] font-extrabold" style={{ fontFamily: "'Syne', sans-serif" }}>₹6.88L</h2>
+            <p className="text-[12px] md:text-[12px] opacity-70">Revenue</p>
           </div>
           <div className="flex-shrink-0">
-            <h2 className="text-2xl md:text-3xl font-bold">3</h2>
-            <p className="text-xs md:text-sm opacity-70">Branches</p>
+            <h2 className="text-[26px] md:text-[26px] font-extrabold" style={{ fontFamily: "'Syne', sans-serif" }}>3</h2>
+            <p className="text-[12px] md:text-[12px] opacity-70">Branches</p>
           </div>
         </div>
       </div>
       <div className="w-full md:w-[35%] bg-gray-50 px-6 md:px-10 py-10 md:py-16 flex flex-col justify-center">
-        <h1 className="text-xl md:text-[26px] font-extrabold mb-2 font-syne">Welcome back</h1>
+        <h1 className="text-xl md:text-[26px] font-extrabold mb-2 mt-4" style={{ fontFamily: "'Syne', sans-serif" }}>Welcome back</h1>
         <p className="text-gray-600 mb-4 md:mb-6 text-[11px] md:text-[12px]">
           Sign in to your NNC CRM workspace. Select your access role below.
         </p>
+        <p className="text-[12px]">Select Your Role</p>
 
-        <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
+        <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6 ">
           {[
-            { id: "master", label: "👑 Master Admin", desc: "Full access" },
-            { id: "manager", label: "🏢 Branch Manager", desc: "Branch view" },
-            { id: "rep", label: "👤 Sales Rep", desc: "Own leads only" },
-            { id: "viewer", label: "👁 Viewer", desc: "Read-only" },
+            { id: "master", icon: "👑", label: " Master Admin", desc: "Full access" },
+            { id: "manager", icon: "🏢", label: " Branch Manager", desc: "Branch view" },
+            { id: "rep", icon: "👤", label: " Sales Rep", desc: "Own leads only" },
+            { id: "viewer", icon: "👁", label: " Viewer", desc: "Read-only" },
           ].map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setRole(item.id)}
-              className={`p-2 md:p-3 rounded-lg border text-left transition text-[10px] md:text-[12px] ${role === item.id
-                ? "border-blue-500 bg-blue-100"
-                : "bg-white hover:border-blue-300"
+              className={`p-2 md:p-2 rounded-lg  border text-left transition text-[10px] md:text-[12px] ${role === item.id
+                ? "border-blue-500 bg-blue-200"
+                : "bg-gray-100 hover:border-blue-500 hover:bg-blue-100"
                 }`}
             >
-              <p className="font-medium">{item.label}</p>
-              <p className="text-gray-500 text-[9px] md:text-[10.5px]">{item.desc}</p>
+              <div className="flex ">
+                <p className="text-xl  py-2 ">{item.icon}</p>
+                <div className="mx-3">
+                  <p className="font-medium">{item.label}</p>
+                  <p className="text-gray-500 text-[9px] md:text-[10.5px]">{item.desc}</p>
+                </div>
+
+              </div>
+
+
             </button>
           ))}
         </div>
@@ -209,7 +224,7 @@ const Homepage = () => {
         </p>
       </div>
     </div>
-    
+
   );
 };
 

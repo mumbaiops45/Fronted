@@ -45,9 +45,9 @@ function KPICard({ icon, label, value, sub, subColor = "text-green-500", accent 
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden">
       <div className={`absolute top-0 left-0 right-0 h-1 ${am[accent] || "bg-blue-500"}`} />
-      <div className="text-2xl mb-1">{icon}</div>
-      <p className="text-xs font-semibold text-gray-400 uppercase">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+      <div className="text-[19px] font-[600] mb-1">{icon}</div>
+      <p className="text-[10px] font-[600] text-gray-400 uppercase">{label}</p>
+      <p className="text-[21px] font-[800] text-gray-900 mt-1">{value}</p>
       <p className={`text-xs font-medium mt-0.5 ${subColor}`}>{sub}</p>
     </div>
   );
@@ -57,8 +57,8 @@ function FunnelBar({ label, value, max, color }) {
   const cm = { blue: "bg-blue-500", indigo: "bg-indigo-400", yellow: "bg-yellow-400", purple: "bg-purple-500", green: "bg-green-500" };
   const pct = max > 0 ? Math.max(value > 0 ? 3 : 0, (value / max) * 100) : 0;
   return (
-    <div className="flex items-center gap-3 py-1">
-      <span className="text-sm text-gray-500 w-28 shrink-0">{label}</span>
+    <div className="flex items-center  gap-3 py-1">
+      <span className="text-[11px] font-[500] text-gray-500 w-28 shrink-0">{label}</span>
       <div className="flex-1 bg-gray-100 rounded h-6 overflow-hidden">
         <div className={`h-full rounded ${cm[color]} flex items-center px-2 transition-all duration-700`} style={{ width: `${pct}%` }}>
           {value > 0 && <span className="text-xs font-bold text-white">{value}</span>}
@@ -238,7 +238,7 @@ export default function Page() {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {!hasData && <DebugPanel results={debugRes} />}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
           <KPICard
             icon="📋"
             label="Total Enquiries"
@@ -271,10 +271,10 @@ export default function Page() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           <div className="lg:col-span-2 space-y-8">
-            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+            <section className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
               <header className="flex items-center justify-between mb-4">
-                <h2 className="text-[14px] font-bold text-gray-900">Sales Funnel — All Branches</h2>
-                <span className="text-[12px] font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                <h2 className="text-[13px] font-[700] text-gray-900">Sales Funnel — All Branches</h2>
+                <span className="text-[12px] font-semibold text-blue-800 bg-blue-50 px-3 py-1 rounded-full">
                   {totalLeads} leads
                 </span>
               </header>
@@ -282,7 +282,7 @@ export default function Page() {
               {branches.length === 0 ? (
                 <p className="text-center text-gray-400 py-10 text-sm">No branch data loaded</p>
               ) : (
-                <div className="space-y-3 ">
+                <div className="space-y-0 ">
                   <FunnelBar label="Lead Capture" value={funnelMap["Lead Capture"] || 0} max={funnelMax} color="blue" />
                   <FunnelBar label="Reachable" value={funnelMap["Reachable"] || 0} max={funnelMax} color="indigo" />
                   <FunnelBar label="Qualified" value={funnelMap["Qualified"] || 0} max={funnelMax} color="yellow" />
@@ -291,9 +291,9 @@ export default function Page() {
                 </div>
               )}
             </section>
-            <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <section className="bg-white rounded-xl p-3 shadow-md border border-gray-100">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-semibold text-gray-900 text-base">Recent Activity</h3>
+                <h3 className="text-[13px] font-[700] text-gray-900 ">Recent Activity</h3>
                 <button
                   onClick={handleViewAll}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
@@ -326,9 +326,9 @@ export default function Page() {
                     return (
                       <li
                         key={index}
-                        className="flex flex-col rounded-md p-3 hover:bg-gray-50 transition cursor-default"
+                        className="flex flex-col rounded-md p-1 hover:bg-gray-50 transition cursor-default"
                       >
-                        <div className="flex flex-wrap items-center gap-2 text-gray-700 text-xs font-medium mb-1">
+                        <div className="flex flex-wrap items-center gap-2 text-gray-700 text-xs font-medium ">
                           <span className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0" aria-hidden="true" />
                           {activity.type && <span>{activity.type} —</span>}
                           {activity.leadName && <span className="font-semibold">{activity.leadName}</span>}
@@ -358,8 +358,8 @@ export default function Page() {
 
 
           <div className="space-y-8">
-            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-              <h3 className="text-[14px] font-bold text-gray-900 mb-4">Branch Performance</h3>
+            <section className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+              <h3 className="text-[13px] font-[700] text-gray-900 mb-4">Branch Performance</h3>
               {sortedBranches.length === 0 ? (
                 <p className="text-center text-gray-400 py-6 text-sm">No data</p>
               ) : (
@@ -392,7 +392,7 @@ export default function Page() {
                           Rate <b className="text-gray-700">{d.convRate}%</b>
                         </span>
                       </div>
-                      <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="mt-2 h-1 bg-gray-100 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${c.dot}`}
                           style={{ width: `${Math.min(d.convRate, 100)}%` }}
@@ -409,8 +409,8 @@ export default function Page() {
                 </div>
               )}
             </section>
-            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-100 space-y-2">
-              <div className="flex justify-between items-center text-[14px] font-bold">
+            <section className="bg-white rounded-xl p-4 shadow-md border border-gray-100 space-y-2">
+              <div className="flex justify-between items-center text-[13px] font-[700]">
                 <h3>Today's Follow-ups</h3>
                 <p className="text-[12px] text-red-600">3 overdue</p>
               </div>
@@ -423,11 +423,11 @@ export default function Page() {
                   key={idx}
                   className={`bg-${f.color}-100 rounded-lg p-2 shadow-inner border border-gray-200`}
                 >
-                  <p className="text-[12px] font-semibold mb-1 text-gray-800">{f.name}</p>
+                  <p className="text-[12px] font-semibold  text-gray-800">{f.name}</p>
                   <div className="flex justify-between items-center text-[12px]">
-                    <p className=" text-gray-600">{f.desc}</p>
+                    <p className=" text-gray-600 ">{f.desc}</p>
                     <span
-                      className={`inline-block text-${f.color}-500 text-[12px] font-bold px-3 py-1 rounded-full`}
+                      className={`inline-block text-${f.color}-500 text-[12px]  px-3  rounded-full`}
                     >
                       {f.status}
                     </span>
@@ -435,7 +435,7 @@ export default function Page() {
                 </div>
               ))}
             </section>
-            <section className="bg-white rounded-xl p-6 shadow-md border border-gray-200 text-center text-sm space-y-0 max-w-md mx-auto">
+            <section className="bg-white rounded-xl p-4 shadow-md border border-gray-200 text-center text-sm space-y-0 max-w-md mx-auto">
               <div className="text-4xl">📁</div>
               <p className="text-[12px] font-bold">{totalDocuments} Documents</p>
               <p className="text-[11px] text-gray-600">
