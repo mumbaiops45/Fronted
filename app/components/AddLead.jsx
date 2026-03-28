@@ -244,18 +244,19 @@ const AddLead = () => {
                             ✕
                         </button>
 
-                        <div className="overflow-y-auto p-6">
+                        <div className="overflow-y-auto p-6 custom-scrollbar">
                             {activeAction === 'upload' && (
                                 <form
                                     onSubmit={handleUpload}
-                                    className="flex flex-col gap-6 w-full text-xs"
+                                    className="flex flex-col gap-2 w-full text-xs"
                                 >
-                                    <div className="flex flex-col gap-1">
-                                        <h2 className="text-xl font-bold text-gray-800">Upload Document</h2>
-                                        <p className="text-gray-500 text-sm">Please provide the document details below.</p>
+                                    <div className="flex flex-col ">
+                                        <h2 className="text-xl font-bold text-gray-800">📎 Upload Document</h2>
+                                        
+                                        <p className='mt-4'>Document Type *</p>
                                     </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid  grid-cols-2 gap-4">
+                                       
                                         {docTypes.map((doc) => (
                                             <div
                                                 key={doc.key}
@@ -269,7 +270,7 @@ const AddLead = () => {
                                         ))}
                                     </div>
 
-                                    <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-2">
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="flex flex-col gap-1">
                                                 <label className="text-gray-600 text-sm font-medium">
@@ -375,11 +376,11 @@ const AddLead = () => {
                                 </form>
                             )}
 
-                            {/* ───── ADD LEAD MODAL ───── */}
+                         
                             {activeAction === 'addLead' && (
                                 <div className="flex flex-col gap-4">
                                     <h2 className="text-xl font-semibold text-gray-800">Add New Lead</h2>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-2">
                                         {[
                                             { label: 'Client Name', name: 'name' },
                                             { label: 'Business Name', name: 'businessName' },

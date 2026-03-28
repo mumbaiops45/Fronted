@@ -410,13 +410,44 @@ const Page = () => {
     return `${days}d ago`;
   }
 
+  // function lightenColor(color, percent = 20) {
+  //   let colorHex = color;
+
+
+  //   if (color.startsWith('rgb')) {
+  //     colorHex = rgbToHex(color);
+  //   }
+
+
+  //   if (colorHex[0] === "#") {
+  //     colorHex = colorHex.slice(1);
+  //   }
+
+  //   let r = parseInt(colorHex.substring(0, 2), 16);
+  //   let g = parseInt(colorHex.substring(2, 4), 16);
+  //   let b = parseInt(colorHex.substring(4, 6), 16);
+
+  //   r = Math.round(r + (255 - r) * (percent / 100));
+  //   g = Math.round(g + (255 - g) * (percent / 100));
+  //   b = Math.round(b + (255 - b) * (percent / 100));
+
+  //   return `rgb(${r}, ${g}, ${b})`;
+  // }
+
+  function rgbToHex(rgb) {
+    const result = rgb.match(/\d+/g);
+    return `#${((1 << 24) | (parseInt(result[0]) << 16) | (parseInt(result[1]) << 8) | parseInt(result[2]))
+      .toString(16)
+      .slice(1)}`;
+  }
+
   const recentUploads = [...documents]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
 
   return (
     <div className="font-sans flex flex-col lg:flex-row gap-4 p-2 bg-gray-50 min-h-screen box-border text-xs">
-      <div className="flex-1 ">
+      <div className="flex-1 p-4">
         <div className="flex flex-wrap gap-2 font-bold text-xs">
           {categories.map((cat) => (
             <button
@@ -550,6 +581,7 @@ const Page = () => {
             <span>{uploadMessage}</span>
           </div>
         )}
+        <p className="font-bold text-[14px]">Quick Upload</p>
         <div
           className={`border-2 border-dashed rounded-xl p-8 text-center text-gray-500 cursor-pointer transition-colors ${uploadStatus === "loading"
             ? "border-blue-300 bg-blue-50 pointer-events-none"
@@ -575,6 +607,7 @@ const Page = () => {
             handleFileDrop(files);
           }}
         >
+
           {uploadStatus === "loading" ? (
             <div className="flex flex-col items-center gap-2">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -622,13 +655,20 @@ const Page = () => {
                 className="bg-green-50 rounded-xl  p-2.5 mb-2.5 flex items-center justify-between font-semibold"
                 style={{ color: cat.color, boxShadow: `0 0 4px ${cat.color}50` }}
               >
+                {/* , backgroundColor: lightenColor(cat.color) */}
                 <span className="flex items-center gap-2 text-[12px]">
                   <span className="text-xl">{getDocTypeIcon(cat.name)}</span>
                   <span>{cat.name}</span>
                 </span>
-                <span
-                  className="text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm"
+                {/* <span
+                  className="text-white  rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm"
                   style={{ backgroundColor: cat.color }}
+                >
+                  {stats[cat.name] || 0}
+                </span> */}
+                <span
+                  className="w-7 h-7 flex items-center justify-center font-[800] text-[16px] font-syne "
+                  style={{ color: cat.color}}
                 >
                   {stats[cat.name] || 0}
                 </span>

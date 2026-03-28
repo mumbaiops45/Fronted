@@ -72,8 +72,6 @@ const UploadDoc = () => {
                 setLoading(false);
                 return alert("Please login first");
             }
-
-            // const response = await axios.post("http://localhost:8080/document", formData, {
             const response = await axios.post(`${BASE_URL}/document`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",

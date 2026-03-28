@@ -140,7 +140,7 @@ const Page = () => {
                 className="bg-white rounded-xl shadow-md  transition-all duration-300 p-3 border border-gray-100"
               >
 
-                <h3 className="text-gray-600 mx-2 mt-2 text-[12px] font-bold tracking-wide mb-1 uppercase">
+                <h3 className="text-gray-600 mx-2 mt-2 text-[12px] font-bold tracking-wide  uppercase">
                   {item.name}
                 </h3>
                 <p className="text-xl mx-2 font-bold text-gray-900">
