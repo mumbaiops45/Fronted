@@ -43,11 +43,13 @@ const DEFAULT_COLOR = { dot: "bg-purple-500" };
 function KPICard({ icon, label, value, sub, subColor = "text-green-500", accent }) {
   const am = { blue: "bg-blue-500", green: "bg-green-500", yellow: "bg-yellow-400", purple: "bg-purple-500" };
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden">
+    <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 relative overflow-hidden
+                transform transition-transform duration-300 
+                hover:-translate-y-1 hover:shadow-md">
       <div className={`absolute top-0 left-0 right-0 h-1 ${am[accent] || "bg-blue-500"}`} />
       <div className="text-[19px] font-[600] mb-1">{icon}</div>
       <p className="text-[10px] font-[600] text-gray-400 uppercase">{label}</p>
-      <p className="text-[21px] font-[800] text-gray-900 mt-1">{value}</p>
+      <p className="text-[21px] font-[800] text-gray-800 mt-1">{value}</p>
       <p className={`text-xs font-medium mt-0.5 ${subColor}`}>{sub}</p>
     </div>
   );
@@ -145,8 +147,6 @@ export default function Page() {
   }
 
 
-
-
   const fetchDocumentCount = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -238,7 +238,7 @@ export default function Page() {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {!hasData && <DebugPanel results={debugRes} />}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-3 mb-8  ">
           <KPICard
             icon="📋"
             label="Total Enquiries"
@@ -305,8 +305,8 @@ export default function Page() {
 
               <ul
                 className={`space-y-3 max-h-96 ${showactivity?.length > 5
-                    ? "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-                    : "overflow-y-hidden"
+                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                  : "overflow-y-hidden"
                   }`}
               >
                 {showactivity
@@ -367,7 +367,7 @@ export default function Page() {
                   const c = BRANCH_COLORS[name] || DEFAULT_COLOR;
                   return (
                     <div key={name}
-                    className="py-3 px-4 mb-2 border border-gray-200 rounded-lg ">
+                      className="py-3 px-4 mb-2 border border-gray-200 rounded-lg ">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center  gap-2 text-[12px] font-bold text-gray-700">
                           <span>🏢</span>
@@ -381,7 +381,7 @@ export default function Page() {
                           }).format(d.revenue)}
                         </span>
                       </div>
-                      <div className="flex gap-4 mt-2 text-[12px] text-gray-500">
+                      <div className="flex gap-4  text-[12px] text-gray-500">
                         <span>
                           Leads <b className="text-gray-700">{d.total}</b>
                         </span>
@@ -392,7 +392,7 @@ export default function Page() {
                           Rate <b className="text-gray-700">{d.convRate}%</b>
                         </span>
                       </div>
-                      <div className="mt-2 h-1 bg-gray-100 rounded-full overflow-hidden">
+                      <div className=" h-1 bg-gray-100 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${c.dot}`}
                           style={{ width: `${Math.min(d.convRate, 100)}%` }}

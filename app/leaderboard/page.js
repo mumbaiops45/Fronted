@@ -100,9 +100,7 @@ export default function Page() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        // const response = await axios.get("http://localhost:8080/leaderboard");
         const response = await axios.get(`${BASE_URL}/leaderboard`);
-        console.log("Leaderboard response:", response.data);
         let leaderboardData = [];
         if (response.data.success && response.data.data) {
           leaderboardData = response.data.data;
@@ -111,14 +109,14 @@ export default function Page() {
         } else if (response.data.data && Array.isArray(response.data.data)) {
           leaderboardData = response.data.data;
         }
-        
+
         setTop3(leaderboardData);
       } catch (err) {
         console.error("Leaderboard error:", err);
         setError(`Failed to load leaderboard: ${err.message}`);
       }
     };
-    
+
     fetchLeaderboard();
   }, []);
   useEffect(() => {
@@ -127,16 +125,16 @@ export default function Page() {
         const token = localStorage.getItem("token");
         // const response = await fetch("http://localhost:8080/allleads", {
         const response = await fetch(`${BASE_URL}/allleads`, {
-          headers: { 
+          headers: {
             "auth-token": token || "",
             "Content-Type": "application/json"
           },
         });
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const json = await response.json();
         console.log("Leads response:", json);
         let leadsData = [];
@@ -149,7 +147,7 @@ export default function Page() {
         } else if (Array.isArray(json)) {
           leadsData = json;
         }
-        
+
         setLeads(Array.isArray(leadsData) ? leadsData : []);
       } catch (e) {
         console.error("Error fetching leads:", e);
@@ -158,7 +156,7 @@ export default function Page() {
         setLoading(false);
       }
     };
-    
+
     fetchLeads();
   }, []);
 
@@ -227,8 +225,8 @@ export default function Page() {
         <div className="bg-red-50 text-red-600 p-4 rounded-lg">
           <p className="font-bold">Error:</p>
           <p>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm"
           >
             Retry
@@ -242,7 +240,7 @@ export default function Page() {
     <div className="bg-slate-50 min-h-screen p-5 text-slate-800 text-[13px]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div className="flex flex-col gap-5 p-4 bg-white rounded-2xl shadow-md">
-          <h2 className="font-bold text-base text-slate-800 mb-1">🏆 Top Performers</h2>
+          <h2 className="font-bold text-base text-slate-800 mb-1">🏆 Rep Leaderboard</h2>
 
           {top3.length > 0 ? (
             top3.map((rep) => {
@@ -281,7 +279,7 @@ export default function Page() {
                       </div>
                     </div>
 
-                    <div className="text-[11px] text-slate-400 mb-1.5">{rep.branch}</div>
+                    <div className="text-[11px] mt-[-9px] text-slate-400 ">{rep.branch}</div>
 
                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div

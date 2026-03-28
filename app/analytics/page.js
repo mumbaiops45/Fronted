@@ -26,12 +26,16 @@ const SOURCE_COLORS = {
     "Phone Call": "#95a5a6",
 };
 
+
+
 const STAGE_COLORS = {
     "Capture→Reach": "#4a90e2",
     "Reach→Qualify": "#f0ad4e",
     "Qualify→Proposal": "#9b59b6",
     "Proposal→Close": "#3ac47d",
 };
+
+
 
 const MONTH_ORDER = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -66,13 +70,13 @@ export default function Page() {
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    
+
 
     useEffect(() => {
         (async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await fetch(`${BASE_URL}/allleads`,{
+                const res = await fetch(`${BASE_URL}/allleads`, {
                     headers: { "auth-token": token || "" },
                 });
 
@@ -94,6 +98,8 @@ export default function Page() {
             }
         })();
     }, []);
+
+
 
 
     const monthlyData = useMemo(() => {
@@ -125,7 +131,7 @@ export default function Page() {
 
     }, [leads]);
 
-    
+
 
     const branchRevenue = useMemo(() => {
 
@@ -146,8 +152,8 @@ export default function Page() {
 
     }, [leads]);
 
- 
-    
+
+
 
     const allBranches = useMemo(
         () => [...new Set(leads.map((l) => l.branch).filter(Boolean))],
@@ -207,7 +213,7 @@ export default function Page() {
 
     }, [leads]);
 
-    
+
 
     const avgDaysData = useMemo(() => {
 
@@ -228,7 +234,7 @@ export default function Page() {
 
     }, [leads]);
 
-   
+
 
     if (loading) {
         return (
@@ -243,7 +249,7 @@ export default function Page() {
         );
     }
 
-    
+
 
     return (
 
@@ -398,7 +404,7 @@ export default function Page() {
 
                             <div key={i} className="flex items-center gap-3">
 
-                                <span className="w-28 text-sm text-slate-600">
+                                <span className="w-28 text-[10.5px] font-bold text-slate-600">
                                     {s.source}
                                 </span>
 
@@ -432,38 +438,61 @@ export default function Page() {
 
                 </div>
 
-                
-
                 <div className="bg-white rounded-xl p-5 shadow-sm border">
-
                     <p className="font-bold text-sm mb-2">
                         Avg Days per Stage
                     </p>
-
-                    <ResponsiveContainer width="100%" height={190}>
-                        <BarChart data={avgDaysData} layout="vertical">
-
-                            <CartesianGrid horizontal={false} strokeDasharray="3 3" />
-                            <XAxis type="number" />
-                            <YAxis type="category" dataKey="stage" />
-
+                    <ResponsiveContainer width="100%" height={200}>
+                        <BarChart
+                            data={avgDaysData}
+                            layout="vertical"
+                            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                        >
+                            <CartesianGrid vertical={true} horizontal={false} strokeDasharray="4 4" />
+                            <XAxis
+                                type="number"
+                                tick={{ fontSize: 10, textAnchor: "middle" }}
+                                axisLine={{ stroke: "#444" }}
+                                tickLine={false}
+                                domain={[0, "dataMax"]}
+                                tickCount={5}
+                                ticks={[0, 1, 2, 3, 4, 5]}
+                                tickFormatter={(v) => Math.floor(v)}
+                                label={{
+                                    value: "Days",
+                                    position: "insideBottom",
+                                    offset: -2,
+                                    style: { fontSize: 10 }
+                                }}
+                                // tick={{ dx: 5 }}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey="stage"
+                                tick={{ fontSize: 10 }}
+                                axisLine={false}
+                                tickLine={false}
+                                width={120}
+                                label={{
+                                    // value: "Stages",
+                                    position: "insideLeft",
+                                    dx: -10,
+                                    style: { fontSize: 10 }
+                                }}
+                            />
                             <Tooltip content={<CustomTooltip />} />
-
-                            <Bar dataKey="days" radius={[0, 5, 5, 0]}>
-
+                            <Bar
+                                dataKey="days"
+                                radius={[0, 6, 6, 0]}
+                                barSize={18}
+                            >
                                 {avgDaysData.map((entry, i) => (
-
                                     <Cell
                                         key={i}
-                                        fill={
-                                            STAGE_COLORS[entry.stage]
-                                        }
+                                        fill={STAGE_COLORS[entry.stage]}
                                     />
-
                                 ))}
-
                             </Bar>
-
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

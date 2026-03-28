@@ -96,23 +96,24 @@ const LeadCard = ({ lead }) => {
     const priorityClass = PRIORITY_COLORS[lead.priority] ?? "bg-gray-100 text-gray-600";
 
     return (
-        <div className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 hover:border-blue-100 cursor-pointer flex flex-col gap-2">
-           
+
+        <div className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition transform duration-300 border border-gray-100 hover:border-blue-500 hover:-translate-y-0.5 cursor-pointer flex flex-col">
             <div className="flex items-start justify-between gap-2">
                 <h2 className="text-xs font-bold text-gray-900 leading-tight truncate">
                     {lead.name || "No Name"}
                 </h2>
-                {lead.priority && (
-                    <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap flex-shrink-0 ${priorityClass}`}>
-                        {lead.priority}
-                    </span>
-                )}
             </div>
 
            
             <p className="text-[10.5px] text-gray-500 truncate">
-                {lead.branch || "—"}
-                {lead.businessName ? ` · ${lead.businessName.split(" ").pop()}` : ""}
+                {/* {lead.businessName ? ` ${lead.businessName.split(" ").pop()}` : ""}
+                {lead.branch || "—"} */}
+                <span>
+  {lead.businessName ? lead.businessName.split(" ").pop() : ""}
+  {lead.businessName && lead.branch ? " " : ""}
+  {lead.branch || "—"}
+</span>
+                
             </p>
 
           
@@ -188,8 +189,6 @@ const Page = () => {
 
            
             const url = cityValue === "All"
-                // ? "http://localhost:8080/allleads"
-                // : `http://localhost:8080/branch/search?location=${cityValue}`;
                 ? `${BASE_URL}/allleads`
                 : `${BASE_URL}/branch/search?location=${cityValue}`;
 
@@ -270,8 +269,6 @@ const Page = () => {
            
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-3 mb-5">
                 <div className="flex flex-wrap items-center gap-3">
-
-                   
                     <div className="flex flex-wrap gap-2">
                         {CITIES.map((city) => (
                             <button
@@ -283,7 +280,7 @@ const Page = () => {
                                         : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
                                 }`}
                             >
-                                {city.label}
+                                {city.label} 
                             </button>
                         ))}
                     </div>
@@ -312,17 +309,18 @@ const Page = () => {
                         >
                             Reset Filters
                         </button>
-                    )}
+                    )} 
+                    <p className="text-xs text-gray-500 ml-auto">
+                    {loading
+                        ? "Fetching leads…"
+                        : `${leads.length} ${leads.length !== 1 ? "" : ""} open. `}
+                </p>
                 </div>
+                
             </div>
 
            
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <p className="text-xs text-gray-500">
-                    {loading
-                        ? "Fetching leads…"
-                        : `${leads.length} lead${leads.length !== 1 ? "s" : ""} found`}
-                </p>
                 {hasFilters && !loading && (
                     <div className="flex flex-wrap gap-1">
                         {selectedCity !== "All" && (

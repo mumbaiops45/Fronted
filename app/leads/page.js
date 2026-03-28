@@ -130,7 +130,7 @@ const Spinner = ({ label = "Loading..." }) => (
 
 
 const Badge = ({ label, colorClass = "bg-gray-100 text-gray-700" }) => (
-    <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${colorClass}`}>
+    <span className={`px-2 py-1 rounded-full text-[11px] font-medium ${colorClass}`}>
         {toDisplayString(label, "N/A")}
     </span>
 );
@@ -689,7 +689,7 @@ const DocsTab = ({ lead }) => {
                     Documents ({docs.length})
                 </h3>
                 <div className="h-3 flex items-center">
-                    <UploadDoc  />
+                    <UploadDoc />
                 </div>
             </div>
             {docs.map((doc, i) => (
@@ -965,7 +965,7 @@ const FilterDropdown = ({ value, options, onChange }) => (
 
 
 
-const HEADERS = ["Name / Contact", "Business", "Branch", "Source", "Stage", "BANT", "Priority", "Value", "Days", "Documents", "Rep"];
+const HEADERS = ["Lead / Contact", "Business", "Branch", "Source", "Stage", "BANT", "Priority", "Value", "Days", "Documents", "Rep"];
 
 const DEFAULT_FILTERS = {
     branch: "All Branch",
@@ -1098,11 +1098,12 @@ const Page = () => {
             />
 
             <div className="w-full p-4">
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4">
-                    <div className="flex flex-wrap items-center gap-3">
+                <div className="bg-white p-2 rounded-md shadow-sm border border-gray-100 mb-4">
+                    <div className="flex flex-wrap items-center gap-3 w-full">
                         <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest whitespace-nowrap">
                             Filter
                         </span>
+
                         {FILTER_CONFIG.map(({ key, options }) => (
                             <FilterDropdown
                                 key={key}
@@ -1111,6 +1112,7 @@ const Page = () => {
                                 onChange={(val) => setFilter(key, val)}
                             />
                         ))}
+
                         {hasActiveFilters() && (
                             <button
                                 onClick={resetFilters}
@@ -1119,14 +1121,15 @@ const Page = () => {
                                 Reset Filters
                             </button>
                         )}
+                        <p className="text-xs text-gray-500 ml-auto">
+                            {loading
+                                ? "Fetching leads…"
+                                : `${leads.length} lead${leads.length !== 1 ? "s" : ""} found`}
+                        </p>
                     </div>
                 </div>
+
                 <div className="mb-3 flex justify-between items-center flex-wrap gap-2">
-                    <p className="text-xs text-gray-500">
-                        {loading
-                            ? "Fetching leads…"
-                            : `${leads.length} lead${leads.length !== 1 ? "s" : ""} found`}
-                    </p>
                     {activeFilterLabels.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                             {activeFilterLabels.map((label) => (
@@ -1144,21 +1147,25 @@ const Page = () => {
                     {loading ? (
                         <Spinner label="Loading leads…" />
                     ) : (
+                       
                         <div className="overflow-x-auto">
+
                             <table className="w-full text-[11px] text-left">
                                 <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
                                     <tr>
                                         {HEADERS.map((h) => (
                                             <th
                                                 key={h}
-                                                className="px-4 py-3 font-semibold whitespace-nowrap uppercase text-[9px] tracking-wider"
+                                                className="px-4 py-3 font-semibold whitespace-nowrap uppercase text-[11px] tracking-wider"
                                             >
                                                 {h}
                                             </th>
+                                            
                                         ))}
+                                      
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-50">
+                                <tbody className="divide-y divide-gray-50  whitespace-nowrap border border-gray-200">
                                     {leads.length > 0 ? (
                                         leads.map((lead) => (
                                             <tr
@@ -1166,15 +1173,15 @@ const Page = () => {
                                                 onClick={() => handleRowClick(lead)}
                                                 className="hover:bg-blue-50 transition cursor-pointer"
                                             >
-                                                <td className="px-4 py-3 whitespace-nowrap">
-                                                    <p className="font-semibold text-gray-900">
+                                                <td className="px-4 py-1 whitespace-nowrap">
+                                                    <p className=" text-[12px] font-semibold text-gray-900">
                                                         {toDisplayString(lead.name, "—")}
                                                     </p>
-                                                    <p className="text-gray-400 text-[10px] mt-0.5">
+                                                    <p className="text-gray-400 text-[11px] mt-0.5">
                                                         {toDisplayString(lead.phone, "—")}
                                                     </p>
                                                 </td>
-                                                <td className="px-4 py-3 whitespace-nowrap text-gray-700">
+                                                <td className="px-4 text-[11px] py-3 whitespace-nowrap text-gray-700">
                                                     {toDisplayString(lead.businessName?.split(" ").pop(), "N/A")}
                                                 </td>
                                                 <td className="px-4 py-3">
@@ -1204,13 +1211,13 @@ const Page = () => {
                                                         colorClass={PRIORITY_COLORS[lead.priority] || "bg-gray-100 text-gray-700"}
                                                     />
                                                 </td>
-                                                <td className="px-4 py-3 font-semibold text-blue-600 whitespace-nowrap">
+                                                <td className="px-4 text-[11px] py-3 font-semibold text-blue-600 whitespace-nowrap">
                                                     {formatCurrency(lead.dealValue)}
                                                 </td>
-                                                <td className="px-4 py-3 text-gray-600">
+                                                <td className="px-4 text  py-3 text-gray-600">
                                                     {daysSince(lead.createdAt)}
                                                 </td>
-                                                <td className="px-4 py-3 text-gray-600">
+                                                <td className="px-4 py-3 text-[11px] text-gray-600">
                                                     {Array.isArray(lead.documents) && lead.documents.length > 0
                                                         ? `${lead.documents.length} doc${lead.documents.length !== 1 ? "s" : ""}`
                                                         : "0 docs"}
@@ -1218,8 +1225,9 @@ const Page = () => {
                                                 <td className="px-4 py-3 whitespace-nowrap text-gray-700">
                                                     {toDisplayString(lead.createdBy?.name, "N/A")}
                                                 </td>
-                                            </tr>
+                                            </tr>   
                                         ))
+                                        
                                     ) : (
                                         <tr>
                                             <td colSpan={HEADERS.length}>
@@ -1233,7 +1241,93 @@ const Page = () => {
                                     )}
                                 </tbody>
                             </table>
+
                         </div>
+
+                        
+//    <div className="w-full text-[11px] text-left border border-gray-200 rounded-md overflow-hidden">
+//     <div className="bg-gray-50 text-gray-500 border-b border-gray-100 grid grid-flow-col  text-[11px] uppercase font-semibold tracking-wider">
+//         {HEADERS.map((h, idx) => (
+//             <div
+//                 key={idx}
+//                 className="px-4 py-3 whitespace-nowrap"
+//             >
+//                 {h}
+//             </div>
+//         ))}
+//     </div>
+
+  
+//     <div className="divide-y divide-gray-50">
+//         {leads.length > 0 ? (
+//             leads.map((lead) => (
+//                 <div
+//                     key={lead._id}
+//                     onClick={() => handleRowClick(lead)}
+//                     className="hover:bg-blue-50 transition cursor-pointer grid grid-cols-11 items-center"
+//                 >
+//                     <div className="px-4 py-1 col-span-1">
+//                         <p className="text-[12px] font-semibold text-gray-900">{toDisplayString(lead.name, "—")}</p>
+//                         <p className="text-gray-400 text-[11px] mt-0.5">{toDisplayString(lead.phone, "—")}</p>
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1 text-[11px] text-gray-700">
+//                         {toDisplayString(lead.businessName?.split(" ").pop(), "N/A")}
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1">
+//                         <Badge
+//                             label={lead.branch}
+//                             colorClass={BRANCH_COLORS[lead.branch] || "bg-gray-100 text-gray-700"}
+//                         />
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1">
+//                         <Badge label={lead.source?.trim().split(" ")[0]} />
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1">
+//                         <Badge
+//                             label={lead.stage?.trim().split(/\s+/).pop()}
+//                             colorClass={STAGE_COLORS[lead.stage] || "bg-gray-100 text-gray-700"}
+//                         />
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1">
+//                         <Badge
+//                             label={lead.bant?.score != null ? `${lead.bant.score}/4` : "0/4"}
+//                             colorClass={getBantColor(lead.bant?.score ?? 0)}
+//                         />
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1">
+//                         <Badge
+//                             label={lead.priority}
+//                             colorClass={PRIORITY_COLORS[lead.priority] || "bg-gray-100 text-gray-700"}
+//                         />
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1 text-[11px] font-semibold text-blue-600">
+//                         {formatCurrency(lead.dealValue)}
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1 text-gray-600 text-[11px]">
+//                         {daysSince(lead.createdAt)}
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1 text-[11px] text-gray-600">
+//                         {Array.isArray(lead.documents) && lead.documents.length > 0
+//                             ? `${lead.documents.length} doc${lead.documents.length !== 1 ? "s" : ""}`
+//                             : "0 docs"}
+//                     </div>
+//                     <div className="px-4 py-3 col-span-1 text-gray-700 text-[11px]">
+//                         {toDisplayString(lead.createdBy?.name, "N/A")}
+//                     </div>
+//                 </div>
+//             ))
+//         ) : (
+//             <div className="px-4 py-6 col-span-11">
+//                 <EmptyState
+//                     icon="🔍"
+//                     title="No leads match your filters"
+//                     subtitle="Try adjusting or resetting the filters above to see more results."
+//                 />
+//             </div>
+//         )}
+//     </div>
+// </div>
+                        
                     )}
                 </div>
             </div>

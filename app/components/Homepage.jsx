@@ -92,7 +92,7 @@ const Homepage = () => {
               >
                 NNC CRM
               </h2>
-              <p className="text-blue-200 text-[13px] md:text-[13px] mt-1">Website Development Services</p>
+              <p className=" text-[13px] md:text-[13px] mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Website Development Services</p>
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@ const Homepage = () => {
           <p className="text-[25px] md:text-[34px] font-[800]" style={{ fontFamily: "'Syne', sans-serif" }}>Your growth.</p>
         </div>
 
-        <p className="mt-4 md:mt-6 max-w-full md:max-w-lg text-[12px] md:text-[14px] opacity-90 leading-relaxed">
+        <p className="mt-4 md:mt-6 max-w-full md:max-w-lg text-[12px] md:text-[14px] opacity-90 leading-relaxed"  style={{ color: 'rgba(255,255,255,0.6)' }}>
           NNC's complete CRM for managing website development enquiries across
           Bangalore, Mumbai & Mysore — from first contact to project delivery.
         </p>

@@ -38,7 +38,7 @@ const page = () => {
     calendarDays.push(
       <div
         key={i}
-        className="p-2 sm:p-4 rounded hover:bg-gray-200 cursor-pointer transition-colors text-xs sm:text-sm"
+        className="p-5 sm:p-5 rounded hover:bg-blue-100 cursor-pointer transition-colors text-xs sm:text-sm"
       >
         {i}
       </div>
@@ -69,7 +69,15 @@ const page = () => {
           </div>
           <div className="flex flex-wrap gap-2 mt-2 sm:mt-0 ml-auto">
             {["Urgent", "Task", "Done", "Follow-up"].map((status) => (
-              <span key={status} className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-medium text-[10px] sm:text-xs">
+              <span
+                key={status}
+                className={`px-2 py-1 rounded-full 
+        ${status === "Urgent" ? "bg-red-100 text-red-800" : ""}
+        ${status === "Task" ? "bg-blue-100 text-blue-800" : ""}
+        ${status === "Done" ? "bg-green-100 text-green-800" : ""}
+        ${status === "Follow-up" ? "bg-orange-100 text-orange-800" : ""}
+        font-medium text-[10px] sm:text-xs`}
+              >
                 ● {status}
               </span>
             ))}
@@ -101,11 +109,11 @@ const page = () => {
             <p className="text-[12px] font-bold">Upcoming</p>
             <p className="text-red-800 text-[12px] bg-red-100 p-2 rounded-md">3 overdue</p>
           </div>
-          <div className="space-y-1 sm:space-y-3 ">
+          <div className="space-y-1  sm:space-y-3 ">
             {tasks.map((task, idx) => (
               <div
                 key={idx}
-                className={`flex   justify-between items-center p-3 rounded border ${task.status === "Overdue" ? "border-red-400 bg-red-50" : "border-gray-200"
+                className={`flex   justify-between  items-center p-3 rounded border ${task.status === "Overdue" ? "border-red-400 bg-red-50" : "border-gray-200"
                   }`}
               >
                 <div>

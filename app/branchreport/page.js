@@ -123,12 +123,10 @@ const Page = () => {
   if (!revenuess) return <p>Loading...</p>;
 
   return (
+
     <div className="min-h-screen bg-slate-50 py-8 px-6">
-
       <div className="max-w-7xl mx-auto">
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
           {performanceData.map((item, index) => {
 
             const percent = Math.min(
@@ -137,26 +135,26 @@ const Page = () => {
             );
 
             return (
-
               <div
                 key={index}
-                className="bg-white rounded-xl  shadow-md hover:shadow-xl transition-all duration-300 p-1 border border-gray-100"
+                className="bg-white rounded-xl shadow-md  transition-all duration-300 p-3 border border-gray-100"
               >
-                <h3 className="text-gray-600 mx-2 mt-2 text-[12px] font-bold tracking-wide mb-1">
+
+                <h3 className="text-gray-600 mx-2 mt-2 text-[12px] font-bold tracking-wide mb-1 uppercase">
                   {item.name}
                 </h3>
-                <p className="text-xl  mx-2 font-bold text-gray-900 ">
+                <p className="text-xl mx-2 font-bold text-gray-900">
                   {formatValue(item.value, item.unit)}
                 </p>
-                <p className="text-sm mx-2 text-gray-500 ">
+                <p className="text-sm mx-2 text-gray-500">
                   Target{" "}
-                  <span className="font-semibold mx-2 text-gray-700">
+                  <span className="font-semibold  mx-2 text-green-600">
                     {formatValue(item.target, item.unit)}
                   </span>
                 </p>
-                <div className="w-full  bg-gray-200 rounded-full h-2">
+                <div className="w-[90%] mx-2 bg-gray-200 rounded-full h-1">
                   <div
-                    className={`h-2 rounded-full ${getProgressColor(percent)}`}
+                    className={`h-1 rounded-full ${getProgressColor(percent)}`}
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
@@ -166,10 +164,7 @@ const Page = () => {
               </div>
             );
           })}
-
         </div>
-
-
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-4 bg-slate-50  py-4">
