@@ -138,7 +138,7 @@ const Page = () => {
                                 <input
                                     type="text"
                                     placeholder="Search client, city, category, project..."
-                                    className="w-full  border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="w-full  border rounded-lg px-4 py-2 text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     value={searchText}
                                     onChange={(e) => setSearchText(e.target.value)}
                                 />
@@ -146,7 +146,7 @@ const Page = () => {
 
                             <div className="flex flex-wrap items-center gap-3">
                                 <select
-                                    className="border rounded-lg px-3 py-2 text-sm"
+                                    className="border rounded-lg px-3 py-2 text-[11px]"
                                     value={selectedCategory}
                                     onChange={(e) => setSelectedCategory(e.target.value)}
                                 >
@@ -182,10 +182,10 @@ const Page = () => {
                                         flex-col justify-between"
                                     >
                                         <div>
-                                            <div className="flexjustify-between items-start mb-2 sm:mb-4">
-                                                <h3 className="text-[16px] font-bold text-gray-900">{proposal.clientName}</h3>
+                                            <div className="flex justify-between items-start mb-2 sm:mb-4">
+                                                <h3 className="text-[14px] font-bold text-gray-900">{proposal.clientName}</h3>
                                                 <span
-                                                    className={`text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap ${proposal.Stage === "Lead"
+                                                    className={`text-[10px] font-semibold px-3 py-1 rounded-full whitespace-nowrap ${proposal.Stage === "Lead"
                                                         ? "bg-blue-100 text-blue-800"
                                                         : proposal.Stage === "Proposal Sent"
                                                             ? "bg-yellow-100 text-yellow-800"
@@ -197,10 +197,10 @@ const Page = () => {
                                                     {proposal.Stage}
                                                 </span>
                                             </div>
-                                            <p className="text-gray-600 text-sm mb-3">{proposal.category}</p>
-                                            <div className="space-y-2 text-gray-700 text-sm">
+                                            <p className="text-gray-600 text-[12px] mb-3">{proposal.category}</p>
+                                            <div className="space-y-2 text-gray-700 text-[12px]">
                                                 <div className="flex justify-between">
-                                                    <span className="font-medium text-gray-800">City:</span>
+                                                    <span className="font-[12px] text-gray-800">City:</span>
                                                     <span>{proposal.city}</span>
                                                 </div>
                                                 <div className="flex justify-between">

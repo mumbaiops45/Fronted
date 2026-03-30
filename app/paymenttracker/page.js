@@ -140,14 +140,14 @@ export default function Page() {
                                         placeholder="Search client, city, category, project..."
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        className="w-full text-[12px] sm:text-sm border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        className="w-full text-[12px]  border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     />
                                 </div>
                                 <div className="flex flex-wrap items-center gap-3">
                                     <select
                                         value={priorityFilter}
                                         onChange={(e) => setPriorityFilter(e.target.value)}
-                                        className="border rounded-lg px-3 py-2 text-[12px] sm:text-sm">
+                                        className="border rounded-lg px-3 py-2 text-[12px] ">
                                         <option value="">All Priorities</option>
                                         <option value="Hot">HOT</option>
                                         <option value="Warm">Warm</option>
@@ -156,7 +156,7 @@ export default function Page() {
                                     <select
                                         value={paymentFilter}
                                         onChange={(e) => setPaymentFilter(e.target.value)}
-                                        className="border rounded-lg px-3 py-2 text-[12px] sm:text-sm"
+                                        className="border rounded-lg px-3 py-2 text-[12px] "
                                     >
                                         <option value="">All Payments</option>
                                         <option value="Partial">Partial</option>
@@ -165,7 +165,7 @@ export default function Page() {
                                     </select>
                                     <p className="text-sm text-gray-500">{filteredClients.length} of {clients.length} clients</p>
                                 </div>
-                                <div className="flex items-center">
+                                <div className="flex  items-center">
                                     <AddClient />
                                     <Newpayment />
                                 </div>
@@ -182,15 +182,16 @@ export default function Page() {
                               gap-6">
                                 {filteredClients.map((client) => (
                                     <div key={client._id} className="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
-                                        <h2 className="text-[14px] font-bold">{client.clientName}</h2>
-                                        <p className="text-[14px] text-gray-600">{client.contactPerson}</p>
-                                        <p className="text-[14px] text-gray-500">{client.location}</p>
-                                        <p className="text-[14px] text-blue-500 ">{client.service}</p>
-                                        <div className="text-[14px] flex justify-between mt-3">
+                                        <h2 className="text-[12px] font-bold">{client.clientName}</h2>
+                                        <p className="text-[12px] text-gray-600">{client.contactPerson}</p>
+                                        <p className="text-[12px] text-gray-500">{client.location}</p>
+                                         <p className="text-[12px] text-dark-500 ">{client.service}</p>
+                                        {/* <p className="text-[12px] text-blue-500 ">{client.service}</p> */}
+                                        <div className="text-[12px] flex justify-between mt-3">
                                             <p>Total: ₹{client.totalValue}</p>
                                             <p>Received: ₹{client.amountReceived}</p>
                                         </div>
-                                        <div className="flex text-[14px] justify-between mt-2">
+                                        <div className="flex text-[12px] justify-between mt-2">
                                             <p>Status: {client.paymentStatus}</p>
                                             <p className={`font-semibold ${client.priority === "Hot" ? "text-red-500" : "text-gray-500"}`}>{client.priority}</p>
                                         </div>

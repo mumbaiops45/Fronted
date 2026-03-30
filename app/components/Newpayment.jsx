@@ -35,7 +35,7 @@ const NewPayment = () => {
 
   useEffect(() => { setMounted(true); }, []);
 
- 
+
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = 'hidden';
@@ -45,7 +45,7 @@ const NewPayment = () => {
     return () => { document.body.style.overflow = 'unset'; };
   }, [isModalOpen]);
 
- 
+
   useEffect(() => {
     const handleClickOutside = () => {
       setIsClientDropdownOpen(false);
@@ -60,14 +60,14 @@ const NewPayment = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
- 
+
     setFieldErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
- 
+
     const errors = {};
     if (!formdata.dateReceived) errors.dateReceived = 'Date is required';
     if (!formdata.client) errors.client = 'Client is required';
@@ -84,7 +84,7 @@ const NewPayment = () => {
         ...formdata,
         amountReceived: Number(formdata.amountReceived),
         tdsClient: Number(formdata.tdsClient || 0),
-        
+
         dateReceived: new Date(formdata.dateReceived + 'T00:00:00').toISOString(),
       };
 
@@ -105,7 +105,7 @@ const NewPayment = () => {
       setIsTdsChecked(false);
       closeModal();
     } catch (err) {
-      
+
       const data = err.response?.data;
       if (data?.errors && Array.isArray(data.errors)) {
         const mapped = {};
@@ -135,15 +135,16 @@ const NewPayment = () => {
       ? <p className="text-red-500 text-[10px] mt-0.5">{fieldErrors[name]}</p>
       : null;
 
-  
+
   const errBorder = (name) =>
     fieldErrors[name] ? 'border-red-400 focus:ring-red-300' : 'border-gray-300 focus:ring-blue-300';
 
   return (
+
     <div className="flex">
       <button
         onClick={openModal}
-        className="px-1 py-2 bg-blue-600 text-[12px] font-bold text-white rounded hover:bg-blue-700 transition"
+        className="px-1 h-8 py-2 bg-blue-600 text-[12px] font-bold text-white rounded hover:bg-blue-700 transition"
       >
         + Log New Payment
       </button>
@@ -153,8 +154,8 @@ const NewPayment = () => {
           className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4"
           onClick={closeModal}
         >
-          <div
-            className="bg-white rounded-lg shadow-lg w-full sm:w-[450px] md:w-[500px] max-h-[90vh] overflow-y-auto p-6 relative text-[10px]"
+          <div 
+            className="bg-white rounded-lg shadow-lg w-full max-w-[670px] max-h-[90vh] overflow-y-auto p-6 relative text-[10px]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -170,7 +171,7 @@ const NewPayment = () => {
             <form onSubmit={handleSubmit}>
               <div className="space-y-3">
 
-               
+
                 <div className="flex justify-between gap-2">
                   <div className="w-1/2">
                     <label className="mb-1 block">Date Received *</label>
@@ -196,7 +197,7 @@ const NewPayment = () => {
                   </div>
                 </div>
 
-                
+
                 <div>
                   <label className="mb-1 block">Client *</label>
                   <div className="relative">
@@ -235,7 +236,7 @@ const NewPayment = () => {
                   <FieldError name="client" />
                 </div>
 
-                
+
                 <div>
                   <label className="mb-1 block">Project / Scope</label>
                   <input
@@ -248,7 +249,7 @@ const NewPayment = () => {
                   />
                 </div>
 
-              
+
                 <div className="flex justify-between gap-2">
                   <div className="w-1/2">
                     <label className="mb-1 block">Amount Received (₹) *</label>
@@ -299,7 +300,7 @@ const NewPayment = () => {
                   </div>
                 </div>
 
-              
+
                 <div>
                   <div className="flex items-center mb-1">
                     <input
@@ -333,7 +334,7 @@ const NewPayment = () => {
                   )}
                 </div>
 
-               
+
                 <div>
                   <label className="block text-[11.5px] font-medium mb-1">Remarks</label>
                   <textarea
@@ -345,7 +346,7 @@ const NewPayment = () => {
                   />
                 </div>
 
-              
+
                 <div className="flex justify-end gap-3 mt-3">
                   <button
                     type="button"
@@ -370,6 +371,7 @@ const NewPayment = () => {
         </div>
       )}
     </div>
+
   );
 };
 

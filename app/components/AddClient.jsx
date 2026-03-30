@@ -132,15 +132,21 @@ const AddClient = () => {
         + Add Client
       </button>
 
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
-        <DialogBackdrop className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+      <Dialog open={open} onClose={setOpen} className="fixed inset-0 z-50">
+        <DialogBackdrop className="fixed w-full inset-0 bg-black/40 backdrop-blur-sm" />
+        
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 text-[10px]">
+            <DialogPanel className="relative bg-white rounded-lg shadow-xl w-full text-left max-w-[670px] max-h-[90vh] overflow-y-auto p-6 text-[10px]">
 
-              <div className="flex items-center mb-4">
-                <h2 className="ml-3 text-[11.5px] font-bold">Add New Client</h2>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className=" text-[11.5px] font-bold">Add New Client</h2>
+
+                <button  
+                onClick={() => setOpen(false)}
+                className='font-bold text-[14px]
+         cursor-pointer'>✕</button>
               </div>
 
               <div className="space-y-3">
@@ -155,7 +161,9 @@ const AddClient = () => {
                       value={formData.clientName}
                       onChange={handleChange}
                       placeholder="e.g. ABC PVT Ltd"
-                      className={`w-full border px-3 py-2 rounded text-[10px] focus:outline-none focus:ring-2 ${errBorder('clientName')}`}
+                      className={`w-full border px-3 py-2 rounded text-[10px] focus:outline-none focus:ring-2 `}
+                      // className={`w-full border px-3 py-2 rounded text-[10px] focus:outline-none focus:ring-2 ${errBorder('clientName')}`}
+
                     />
                     <FieldError name="clientName" />
                   </div>
@@ -171,8 +179,6 @@ const AddClient = () => {
                     />
                   </div>
                 </div>
-
-                {/* Location + Service */}
                 <div className="flex justify-between gap-3">
                   <div className="w-1/2">
                     <label className="mb-1 font-medium block">City / Location</label>
@@ -211,7 +217,7 @@ const AddClient = () => {
                   </div>
                 </div>
 
-                {/* Description */}
+                
                 <div>
                   <label className="mb-1 font-medium block">Project Description</label>
                   <textarea
@@ -223,7 +229,7 @@ const AddClient = () => {
                   />
                 </div>
 
-                {/* Total Value + Amount Received */}
+               
                 <div className="flex justify-between gap-3">
                   <div className="w-1/2">
                     <label className="mb-1 font-medium block">Total Value (₹) *</label>
@@ -233,7 +239,7 @@ const AddClient = () => {
                       value={formData.totalValue}
                       onChange={handleChange}
                       placeholder="0"
-                      className={`w-full border px-3 py-2 rounded text-[10px] focus:outline-none focus:ring-2 ${errBorder('totalValue')}`}
+                      className={`w-full border px-3 py-2 rounded text-[10px] focus:outline-none focus:ring-2 `}
                     />
                     <FieldError name="totalValue" />
                   </div>
@@ -250,7 +256,7 @@ const AddClient = () => {
                   </div>
                 </div>
 
-                {/* Proposal Date + Follow-up Deadline */}
+                
                 <div className="flex justify-between gap-3">
                   <div className="w-1/2">
                     <label className="mb-1 font-medium block">Proposal Date</label>
@@ -274,7 +280,7 @@ const AddClient = () => {
                   </div>
                 </div>
 
-                {/* Priority + Payment Status */}
+               
                 <div className="flex justify-between gap-3">
                   <div className="w-1/2">
                     <label className="mb-1 font-medium block">Priority</label>
@@ -308,7 +314,7 @@ const AddClient = () => {
                   </div>
                 </div>
 
-                {/* Next Action */}
+               
                 <div>
                   <label className="mb-1 font-medium block">Next Action</label>
                   <textarea
@@ -320,7 +326,7 @@ const AddClient = () => {
                   />
                 </div>
 
-                {/* Last Follow-up Date + Notes */}
+               
                 <div className="flex justify-between gap-3">
                   <div className="w-1/2">
                     <label className="mb-1 font-medium block">Last Follow-up Date</label>
@@ -346,15 +352,15 @@ const AddClient = () => {
                 </div>
               </div>
 
-              {/* API error */}
+              
               {error && (
                 <p className="text-red-500 text-[10px] mt-3">
                   {error?.message || error}
                 </p>
               )}
 
-              {/* Buttons */}
-              <div className="bg-gray-50 px-4 py-3 mt-4 flex justify-end gap-3">
+             
+              <div className=" px-4 py-3 mt-4 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
