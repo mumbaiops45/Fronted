@@ -142,7 +142,6 @@ const AddClient = () => {
 
               <div className="flex justify-between items-center mb-4">
                 <h2 className=" text-[11.5px] font-bold">Add New Client</h2>
-
                 <button  
                 onClick={() => setOpen(false)}
                 className='font-bold text-[14px]

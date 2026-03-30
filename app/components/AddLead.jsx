@@ -6,12 +6,15 @@ import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { BASE_URL } from '@/utils/axiosInstance'
+// import { leadsearchName } from '@/hooks/lead.hook'
 
 const AddLead = () => {
     const router = useRouter()
     const [activeAction, setActiveAction] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [fieldErrors, setFieldErrors] = useState({})
+    const [name, setName] = useState("");
+    // const { data,  error, fetchSearch, clearSearch } = leadsearchName();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -34,6 +37,36 @@ const AddLead = () => {
     const stages = ["Lead Capture", "Reachable", "Qualified", "Proposal Sent", "Closed Won", "Closed Lost"]
     const priorities = ["Hot", "Warm", "Cool"]
     const sources = ["WhatsApp", "Website Form", "Phone Call", "Referral", "Social Media", "Walk-in", "Other"]
+
+    // useEffect(() => {
+    //     if(name.trim() === ""){
+    //         clearSearch();
+    //         return;
+    //     }
+    //     fetchSearch(name);
+    // }, [name, fetchSearch, clearSearch]);
+
+//      useEffect(() => {
+//     if (name.trim() === "") {
+//       clearSearch();
+//       return;
+//     }
+
+//     const timer = setTimeout(() => {
+//       fetchSearch(name);
+//     }, 500); 
+
+//     return () => clearTimeout(timer);
+//   }, [name, fetchSearch, clearSearch]);
+
+ 
+//   useEffect(() => {
+//     if (data?.length > 0) {
+//       console.log("Fetched Data:", data);
+//     }
+//     console.log("Serach Data: ", data);
+//   }, [data]);
+
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -197,7 +230,7 @@ const AddLead = () => {
     return (
         <div className="relative  bg-white-100">
             <div className="flex flex-col sm:flex-row justify-between items-center px-5 gap-4 ">
-                <h1 className="text-xl mt-4 sm:text-2xl font-bold">All Leads</h1>
+                <h1 className="text-xl mt-4 sm:text-2xl font-bold">All Leads </h1>
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
 
                     <div className="relative w-full sm:w-64 h-8">
@@ -208,6 +241,8 @@ const AddLead = () => {
                             type="text"
                             placeholder="Search Leads"
                             className="pl-8 pr-3 h-full w-full text-[12px] border rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
                     </div>
                     <div className='flex gap-2 w-full sm:w-auto'>
